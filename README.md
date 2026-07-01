@@ -6,13 +6,13 @@ A production-ready, multi-service business center website built for KABOSS Inc, 
 
 **Frontend:** React 18, TypeScript, Vite, Tailwind CSS, shadcn/ui, Framer Motion, GSAP, TanStack Query, React Router, Zustand, Recharts
 
-**Backend:** Node.js, Express.js, TypeScript, Firebase Admin SDK
+**Backend:** Node.js, Express.js, TypeScript, MySQL, Sequelize ORM, JWT Auth, Nodemailer
 
-**Database:** Firebase Firestore
+**Database:** MySQL 8.0+
 
-**Auth:** Firebase Authentication
+**Auth:** JWT (JSON Web Tokens) + bcrypt
 
-**Storage:** Firebase Storage
+**Storage:** Local filesystem + future cloud integration support
 
 ## Features
 
@@ -45,7 +45,8 @@ A production-ready, multi-service business center website built for KABOSS Inc, 
 ### Prerequisites
 - Node.js 18+
 - npm or yarn
-- Firebase project (with Firestore, Auth, Storage enabled)
+- MySQL 8.0+ (local or remote)
+- Git
 
 ### Installation
 
