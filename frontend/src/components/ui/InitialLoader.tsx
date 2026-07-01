@@ -1,16 +1,18 @@
 import { useEffect, useState } from 'react';
-import { SplashLogo } from './SplashLogo';
+import { KabossIncLoader } from '../KabossIncLoader';
 
 export function InitialLoader() {
-  const [mounted, setMounted] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    // Ensure splash appears immediately after first render.
-    setMounted(true);
+    const timer = setTimeout(() => setIsVisible(false), 3500);
+    return () => clearTimeout(timer);
   }, []);
 
-  if (!mounted) return null;
-
-  return <SplashLogo />;
+  return (
+    <KabossIncLoader
+      isVisible={isVisible}
+      onComplete={() => setIsVisible(false)}
+    />
+  );
 }
-
