@@ -173,6 +173,38 @@ app.get('/api/auth/me', verifyTokenMiddleware, async (req: any, res) => {
   }
 });
 
+app.patch('/api/auth/me', verifyTokenMiddleware, async (req: any, res) => {
+  try {
+    const { displayName, phone } = req.body;
+    const user = await User.findByPk(req.userId);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    if (displayName) user.displayName = displayName;
+    if (phone) user.phone = phone;
+
+    await user.save();
+    const updated = user.toJSON();
+    delete (updated as any).password;
+    res.json(updated);
+  } catch (error) {
+    console.error('Failed to update user:', error);
+    res.status(500).json({ error: 'Failed to update user' });
+  }
+});
+
+app.delete('/api/auth/me', verifyTokenMiddleware, async (req: any, res) => {
+  try {
+    const user = await User.findByPk(req.userId);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    await user.destroy();
+    res.json({ message: 'Account deleted successfully' });
+  } catch (error) {
+    console.error('Failed to delete user:', error);
+    res.status(500).json({ error: 'Failed to delete user' });
+  }
+});
+
 app.use('/api/bookings', bookingsRouter);
 app.use('/api/messages', messagesRouter);
 app.use('/api/contacts', contactsRouter);
