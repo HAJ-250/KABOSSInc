@@ -27,13 +27,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setUser({
             id: data.id,
             email: data.email,
-            displayName: data.display_name,
+            displayName: data.displayName,
             role: data.role,
             phone: data.phone,
-            emailVerified: data.email_verified,
-            isActive: data.is_active,
-            createdAt: new Date(data.created_at),
-            updatedAt: new Date(data.updated_at || data.created_at),
+            emailVerified: data.emailVerified,
+            isActive: data.isActive,
+            createdAt: new Date(data.createdAt),
+            updatedAt: new Date(data.updatedAt || data.createdAt),
           });
         })
         .catch(() => {
