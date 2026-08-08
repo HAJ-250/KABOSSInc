@@ -1,12 +1,14 @@
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Users, CalendarCheck, MessageSquare, Eye, TrendingUp, BarChart3 } from 'lucide-react';
+import { Users, CalendarCheck, MessageSquare, Eye, TrendingUp, BarChart3, Image as ImageIcon } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { api } from '@/services/api';
 
-const stats = [
-  { icon: Eye, label: 'Visitors Today', value: '47', change: '+12%', color: 'from-kaboss-500 to-cyan-500' },
-  { icon: Users, label: 'Registered Customers', value: '128', change: '+8%', color: 'from-purple-500 to-pink-500' },
-  { icon: CalendarCheck, label: 'Active Bookings', value: '12', change: '+3', color: 'from-amber-500 to-orange-500' },
-  { icon: MessageSquare, label: 'Unread Messages', value: '5', change: '-2', color: 'from-green-500 to-emerald-500' },
+const statCards = [
+  { key: 'users', icon: Users, label: 'Registered Customers', color: 'from-purple-500 to-pink-500' },
+  { key: 'bookings', icon: CalendarCheck, label: 'Total Bookings', color: 'from-amber-500 to-orange-500' },
+  { key: 'messages', icon: MessageSquare, label: 'Chat Messages', color: 'from-green-500 to-emerald-500' },
+{ key: 'gallery', icon: ImageIcon, label: 'Gallery Images', color: 'from-premium-gold to-amber-500' },
 ];
 
 const recentBookings = [
@@ -17,6 +19,13 @@ const recentBookings = [
 
 export function AdminDashboard() {
   const { user } = useAuth();
+  const [stats, setStats] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    api.getAdminStats()
+      .then(setStats)
+      .catch(() => {});
+  }, []);
 
   return (
     <div className="space-y-8">
@@ -28,9 +37,9 @@ export function AdminDashboard() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat, i) => (
+        {statCards.map((stat, i) => (
           <motion.div
-            key={stat.label}
+            key={stat.key}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
@@ -41,14 +50,9 @@ export function AdminDashboard() {
                 <stat.icon className="h-6 w-6 text-white" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{stat.value}</p>
+                <p className="text-2xl font-bold">{stats[stat.key] ?? '...'}</p>
                 <p className="text-sm text-gray-500 dark:text-gray-400">{stat.label}</p>
               </div>
-            </div>
-            <div className="mt-3 flex items-center gap-1 text-xs">
-              <TrendingUp className="h-3 w-3 text-green-500" />
-              <span className="text-green-500 font-medium">{stat.change}</span>
-              <span className="text-gray-400">vs yesterday</span>
             </div>
           </motion.div>
         ))}

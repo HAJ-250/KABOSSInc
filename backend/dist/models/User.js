@@ -39,6 +39,10 @@ User.init({
         type: DataTypes.STRING(255),
         allowNull: true,
     },
+    profilePictureUrl: {
+        type: DataTypes.STRING(512),
+        allowNull: true,
+    },
     emailVerified: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,

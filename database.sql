@@ -14,8 +14,9 @@ CREATE TABLE IF NOT EXISTS `Users` (
   `username` VARCHAR(255) NULL DEFAULT NULL,
   `password` VARCHAR(255) NOT NULL,
   `displayName` VARCHAR(255) NOT NULL,
-  `role` ENUM('customer','admin') NOT NULL DEFAULT 'customer',
+`role` ENUM('customer','admin') NOT NULL DEFAULT 'customer',
   `phone` VARCHAR(255) NULL DEFAULT NULL,
+  `profilePictureUrl` VARCHAR(512) NULL DEFAULT NULL,
   `emailVerified` TINYINT(1) NOT NULL DEFAULT '0',
   `isActive` TINYINT(1) NOT NULL DEFAULT '1',
   `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -85,9 +86,29 @@ CREATE TABLE IF NOT EXISTS `Messages` (
   `senderName` VARCHAR(255) NULL DEFAULT NULL,
   `content` TEXT NOT NULL,
   `isRead` TINYINT(1) NOT NULL DEFAULT '0',
+  `deliveredAt` DATETIME NULL DEFAULT NULL,
+  `seenAt` DATETIME NULL DEFAULT NULL,
   `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
+  INDEX `conversationId` (`conversationId`),
+  INDEX `senderId` (`senderId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `Attachments` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `messageId` INT UNSIGNED NOT NULL,
+  `conversationId` INT UNSIGNED NOT NULL,
+  `senderId` INT UNSIGNED NOT NULL,
+  `fileName` VARCHAR(255) NOT NULL,
+  `fileType` ENUM('image','pdf','zip','document','other') NOT NULL DEFAULT 'other',
+  `mimeType` VARCHAR(255) NOT NULL,
+  `storagePath` TEXT NOT NULL,
+  `size` BIGINT UNSIGNED NOT NULL DEFAULT '0',
+  `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `messageId` (`messageId`),
   INDEX `conversationId` (`conversationId`),
   INDEX `senderId` (`senderId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -200,4 +221,4 @@ INSERT INTO `Announcements` (`title`, `content`, `type`, `isActive`, `createdAt`
 
 -- Site Settings
 INSERT INTO `Settings` (`key`, `value`, `createdAt`, `updatedAt`) VALUES
-('general', '{"heroTitle":"Your Trusted Multi-Service Business Center","heroSubtitle":"From printing to photography, we bring your ideas to life.","mission":"To provide accessible, high-quality business services that empower our community.","vision":"To be the leading multi-service business center in Rwanda.","coreValues":["Integrity","Excellence","Innovation","Customer Focus"],"businessHours":{"monday":"8:00 AM - 6:00 PM","tuesday":"8:00 AM - 6:00 PM","wednesday":"8:00 AM - 6:00 PM","thursday":"8:00 AM - 6:00 PM","friday":"8:00 AM - 6:00 PM","saturday":"8:00 AM - 6:00 PM","sunday":"9:00 AM - 2:00 PM"},"contact":{"phone":"+250 78 XXX XXXX","email":"info@kabossinc.com","whatsapp":"+250 78 XXX XXXX","address":"Nyamasheke District, Ruharambuga Sector, Ntendezi Cell, Kakiru Village, Rwanda"},"socialMedia":{"facebook":"#","instagram":"#","whatsapp":"#"},"seo":{"title":"KABOSS Inc - Multi-Service Business Center","description":"Premium printing, design, photography & digital services in Nyamasheke, Rwanda.","keywords":"KABOSS, printing, graphic design, photography, sound system, Rwanda, Nyamasheke"}}', NOW(), NOW());
+('general', '{"heroTitle":"Your Trusted Multi-Service Business Center","heroSubtitle":"From printing to photography, we bring your ideas to life.","mission":"To provide accessible, high-quality business services that empower our community.","vision":"To be the leading multi-service business center in Rwanda.","coreValues":["Integrity","Excellence","Innovation","Customer Focus"],"businessHours":{"monday":"8:00 AM - 6:00 PM","tuesday":"8:00 AM - 6:00 PM","wednesday":"8:00 AM - 6:00 PM","thursday":"8:00 AM - 6:00 PM","friday":"8:00 AM - 6:00 PM","saturday":"8:00 AM - 6:00 PM","sunday":"9:00 AM - 2:00 PM"},"contact":{"phone":"+250 788 882 296","email":"kabbossimage@gmail.com","whatsapp":"+250 788 882 296","address":"Nyamasheke District, Ruharambuga Sector, Ntendezi Cell, Kakiru Village, Rwanda"},"socialMedia":{"facebook":"https://www.facebook.com/search/top?q=Kaboss%20Image","instagram":"#","whatsapp":"https://wa.me/250788882296"},"seo":{"title":"KABOSS Inc - Multi-Service Business Center","description":"Premium printing, design, photography & digital services in Nyamasheke, Rwanda.","keywords":"KABOSS, printing, graphic design, photography, sound system, Rwanda, Nyamasheke"}}', NOW(), NOW());

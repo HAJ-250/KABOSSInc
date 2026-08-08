@@ -3,17 +3,22 @@ import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard, CalendarCheck, MessageSquare, Download, Bell, User,
-  Settings, LogOut, Menu, X, ChevronDown, Home,
+  Settings, LogOut, Menu, X, ChevronDown, Home, Image as ImageIcon, FileText, CreditCard, Moon, Sun,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, resolveImageUrl } from '@/lib/utils';
 import { useAuth } from '@/context/AuthContext';
+import { useThemeStore } from '@/store/useThemeStore';
 import toast from 'react-hot-toast';
+import { Footer } from '@/components/layout/Footer';
 
 const navItems = [
   { icon: LayoutDashboard, label: 'Overview', href: '/dashboard' },
   { icon: CalendarCheck, label: 'My Bookings', href: '/dashboard/bookings' },
+  { icon: FileText, label: 'My Quotes', href: '/dashboard/quotes' },
+  { icon: CreditCard, label: 'Payments', href: '/dashboard/payments' },
   { icon: MessageSquare, label: 'Messages', href: '/dashboard/messages' },
   { icon: Download, label: 'Downloads', href: '/dashboard/downloads' },
+  { icon: ImageIcon, label: 'Gallery', href: '/dashboard/gallery' },
   { icon: Bell, label: 'Notifications', href: '/dashboard/notifications' },
   { icon: User, label: 'Profile', href: '/dashboard/profile' },
   { icon: Settings, label: 'Settings', href: '/dashboard/settings' },
@@ -23,7 +28,8 @@ export function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const location = useLocation();
-  const { user, logout } = useAuth();
+const { user, logout } = useAuth();
+  const { isDarkMode, toggleDarkMode } = useThemeStore();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -52,12 +58,16 @@ export function DashboardLayout() {
         'fixed top-0 left-0 z-50 h-full w-72 bg-white dark:bg-premium-dark border-r border-gray-100 dark:border-gray-800 transition-transform duration-300 lg:translate-x-0',
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       )}>
-        <div className="flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-800">
+<div className="flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-800">
           <Link to="/" className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-kaboss-500 to-kaboss-700 flex items-center justify-center">
-              <span className="text-white font-bold text-sm">K</span>
+            <div className="h-9 w-9 rounded-xl overflow-hidden ring-2 ring-kaboss-500/30">
+              <img
+                src="/images/kabossinc%20logo.jpg"
+                alt="KABOSS Inc"
+                className="h-full w-full object-cover"
+              />
             </div>
-            <span className="font-bold">KABOSS</span>
+            <span className="font-bold bg-gradient-to-r from-kaboss-600 to-kaboss-800 bg-clip-text text-transparent">KABOSS</span>
           </Link>
           <button
             onClick={() => setSidebarOpen(false)}
@@ -116,13 +126,29 @@ export function DashboardLayout() {
               Welcome back, <span className="font-medium text-gray-800 dark:text-white">{user?.displayName}</span>
             </div>
 
-            <div className="relative">
+<div className="flex items-center gap-2">
+              <button
+                onClick={toggleDarkMode}
+                className="h-10 w-10 rounded-xl flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                aria-label="Toggle dark mode"
+              >
+                {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              </button>
+              <div className="relative">
               <button
                 onClick={() => setProfileOpen(!profileOpen)}
                 className="flex items-center gap-2 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               >
-                <div className="h-8 w-8 rounded-full bg-gradient-to-br from-kaboss-500 to-kaboss-700 flex items-center justify-center text-white text-sm font-medium">
-                  {user?.displayName?.charAt(0) || 'U'}
+<div className="h-8 w-8 rounded-full bg-gradient-to-br from-kaboss-500 to-kaboss-700 flex items-center justify-center text-white text-sm font-medium overflow-hidden">
+                  {(user as any)?.profilePictureUrl ? (
+                    <img
+                      src={resolveImageUrl((user as any).profilePictureUrl)}
+                      alt="Profile"
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    user?.displayName?.charAt(0) || 'U'
+                  )}
                 </div>
                 <ChevronDown className={cn('h-4 w-4 text-gray-400 transition-transform', profileOpen && 'rotate-180')} />
               </button>
@@ -153,15 +179,18 @@ export function DashboardLayout() {
                     </button>
                   </motion.div>
                 )}
-              </AnimatePresence>
+</AnimatePresence>
+            </div>
             </div>
           </div>
         </header>
 
-        {/* Page content */}
+{/* Page content */}
         <main className="p-4 lg:p-8">
           <Outlet />
         </main>
+        {/* Consistent footer across all dashboard pages */}
+        <Footer />
       </div>
     </div>
   );

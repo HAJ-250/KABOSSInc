@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { services, serviceCategories } from '@/data/services';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/context/AuthContext';
 
 const fadeUp = {
   initial: { opacity: 0, y: 30 },
@@ -17,6 +18,7 @@ const fadeUp = {
 export function Services() {
   const location = useLocation();
   const [activeCategory, setActiveCategory] = useState('all');
+  const { user } = useAuth();
 
   useEffect(() => {
     const hash = location.hash.replace('#', '');
@@ -99,21 +101,40 @@ export function Services() {
                         ))}
                       </div>
                       <div className="flex flex-wrap gap-3">
-                        <Button>
-                          <BookOpen className="mr-2 h-4 w-4" />
-                          Request Quote
-                        </Button>
-                        <Button variant="outline">
-                          Book Service
-                        </Button>
+                        <Link to={user ? `/services/${service.id}/quote` : `/login?redirect=${encodeURIComponent(`/services/${service.id}/quote`)}`}>
+                          <Button>
+                            <BookOpen className="mr-2 h-4 w-4" />
+                            Request Quote
+                          </Button>
+                        </Link>
+                        <Link to={user ? `/dashboard/bookings?service=${service.id}` : `/login?redirect=${encodeURIComponent(`/dashboard/bookings?service=${service.id}`)}`}>
+                          <Button variant="outline">
+                            Book Service
+                          </Button>
+                        </Link>
+                        <Link to={`/services/${service.id}`}>
+                          <Button variant="ghost">
+                            View Details
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                          </Button>
+                        </Link>
                       </div>
                     </div>
-                    <div className="relative">
-                      <div className={cn('aspect-square rounded-2xl bg-gradient-to-br', service.color, 'opacity-20')} />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <service.icon className="h-32 w-32 text-gray-300 dark:text-gray-600" />
+                    <Link to={`/services/${service.id}`} className="relative block group">
+                      <div className="aspect-square rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 shadow-xl">
+                        <img
+                          src={service.image}
+                          alt={service.title}
+                          loading="lazy"
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
                       </div>
-                    </div>
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div className="flex items-center gap-2 px-6 py-3 rounded-full bg-black/60 text-white text-sm font-medium backdrop-blur-sm">
+                          View Details <ArrowRight className="h-4 w-4" />
+                        </div>
+                      </div>
+                    </Link>
                   </div>
                 </div>
               </motion.div>

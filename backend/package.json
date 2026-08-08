@@ -7,9 +7,17 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "prisma": "prisma",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+"db:seed": "tsx src/seed.ts",
+    "db:migrate:payments": "tsx src/migrate-payments.ts",
+    "db:migrate:chat": "tsx src/migrate-chat.ts",
+    "db:migrate:profile": "tsx src/migrate-profile-picture.ts"
   },
   "dependencies": {
+    "@prisma/client": "^6.11.0",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -21,6 +29,7 @@
     "mysql2": "^3.22.5",
     "nodemailer": "^6.9.16",
     "sequelize": "^6.37.8",
+    "socket.io": "^4.8.3",
     "uuid": "^10.0.0",
     "zod": "^3.23.8"
   },
@@ -33,6 +42,7 @@
     "@types/node": "^22.9.0",
     "@types/nodemailer": "^6.4.16",
     "@types/uuid": "^10.0.0",
+    "prisma": "^6.11.0",
     "tsx": "^4.19.2",
     "typescript": "^5.6.3"
   }

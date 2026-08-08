@@ -2,18 +2,39 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import bcrypt from 'bcryptjs';
+import dotenv from 'dotenv';
+import http from 'http';
+import { Server as SocketIOServer } from 'socket.io';
+
+dotenv.config();
 import User from './models/User.js';
 import { initDatabase, stopDatabase } from './config/database.js';
 import { signToken } from './config/auth.js';
 import { verifyTokenMiddleware } from './middleware/auth.js';
 import { apiLimiter, authLimiter } from './middleware/rateLimiter.js';
 import bookingsRouter from './routes/bookings.js';
+import quotesRouter from './routes/quotes.js';
 import messagesRouter from './routes/messages.js';
 import contactsRouter from './routes/contacts.js';
 import adminRouter from './routes/admin.js';
+import adminUploadRouter from './routes/admin-upload.js';
+import galleryRouter from './routes/gallery.js';
+import notificationsRouter from './routes/notifications.js';
+import downloadsRouter from './routes/downloads.js';
+import adminBookingFilesRouter from './routes/admin-booking-files.js';
+import adminChatRouter from './routes/admin-chat.js';
+import profilePictureRouter from './routes/profile-picture.js';
+import paymentsRouter from './routes/payments.js';
+import { initSocket } from './socket/index.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+const FRONTEND_URLS = [
+  process.env.FRONTEND_URL || 'http://localhost:5173',
+  process.env.ADMIN_URL || 'http://localhost:5174',
+  process.env.ADMIN_URL || 'http://localhost:5173',
+];
 
 process.on('unhandledRejection', (reason) => {
   console.error('Unhandled Rejection:', reason);
@@ -24,9 +45,14 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
-app.use(helmet());
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+}));
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    if (!origin || FRONTEND_URLS.includes(origin)) return callback(null, true);
+    return callback(null, false);
+  },
   credentials: true,
 }));
 app.use(express.json({ limit: '10mb' }));
@@ -88,9 +114,10 @@ app.post('/api/auth/login', authLimiter, async (req, res) => {
         id: user.id,
         _id: String(user.id),
         email: user.email,
-        displayName: user.displayName,
+displayName: user.displayName,
         role: user.role,
         phone: user.phone,
+        profilePictureUrl: (user as any).profilePictureUrl,
       },
     });
   } catch (error) {
@@ -127,7 +154,7 @@ app.post('/api/auth/admin-login', authLimiter, async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    const token = signToken({ userId: String(user.id), email: user.email || '', role: user.role });
+const token = signToken({ userId: String(user.id), email: user.email || '', role: user.role });
     res.json({
       token,
       user: {
@@ -137,6 +164,7 @@ app.post('/api/auth/admin-login', authLimiter, async (req, res) => {
         email: user.email,
         displayName: user.displayName,
         role: user.role,
+        profilePictureUrl: (user as any).profilePictureUrl,
       },
     });
   } catch (error) {
@@ -175,12 +203,13 @@ app.get('/api/auth/me', verifyTokenMiddleware, async (req: any, res) => {
 
 app.patch('/api/auth/me', verifyTokenMiddleware, async (req: any, res) => {
   try {
-    const { displayName, phone } = req.body;
+    const { displayName, phone, profilePictureUrl } = req.body;
     const user = await User.findByPk(req.userId);
     if (!user) return res.status(404).json({ error: 'User not found' });
 
     if (displayName) user.displayName = displayName;
     if (phone) user.phone = phone;
+    if (profilePictureUrl) (user as any).profilePictureUrl = profilePictureUrl;
 
     await user.save();
     const updated = user.toJSON();
@@ -206,17 +235,45 @@ app.delete('/api/auth/me', verifyTokenMiddleware, async (req: any, res) => {
 });
 
 app.use('/api/bookings', bookingsRouter);
+app.use('/api/quotes', quotesRouter);
 app.use('/api/messages', messagesRouter);
 app.use('/api/contacts', contactsRouter);
+app.use('/api/notifications', notificationsRouter);
+app.use('/api/downloads', downloadsRouter);
+app.use('/api/gallery', galleryRouter);
 app.use('/api/admin', adminRouter);
+app.use('/api/admin', adminUploadRouter);
+app.use('/api/admin/chat', adminChatRouter);
+app.use('/api/admin/bookings', adminBookingFilesRouter);
+app.use('/api/profile-picture', profilePictureRouter);
+app.use('/api/payments', paymentsRouter);
+app.use('/uploads', express.static('uploads'));
+
+
 
 app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error('Unhandled error:', err);
   res.status(500).json({ error: 'Internal server error' });
 });
 
-process.on('SIGINT', async () => { await stopDatabase(); process.exit(0); });
-process.on('SIGTERM', async () => { await stopDatabase(); process.exit(0); });
+let httpServer: http.Server | null = null;
+
+process.on('SIGINT', async () => {
+  try {
+    if (httpServer) await new Promise((resolve) => httpServer?.close(resolve));
+  } finally {
+    await stopDatabase();
+    process.exit(0);
+  }
+});
+process.on('SIGTERM', async () => {
+  try {
+    if (httpServer) await new Promise((resolve) => httpServer?.close(resolve));
+  } finally {
+    await stopDatabase();
+    process.exit(0);
+  }
+});
 
 async function start() {
   await initDatabase();
@@ -224,9 +281,22 @@ async function start() {
   const { default: seed } = await import('./seed.js');
   await seed();
 
-  app.listen(PORT, () => {
+  httpServer = http.createServer(app);
+
+  const io = new SocketIOServer(httpServer, {
+    cors: {
+      origin: FRONTEND_URLS,
+      methods: ['GET', 'POST'],
+      credentials: true,
+    },
+  });
+
+  initSocket(io);
+
+  httpServer.listen(PORT, () => {
     console.log(`KABOSS Inc API server running on port ${PORT}`);
   });
 }
 
 start();
+

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Eye, EyeOff, LogIn, Shield } from 'lucide-react';
+import { Eye, EyeOff, LogIn } from 'lucide-react';
 import { apiRequest, setToken, setStoredUser } from '../lib/api';
 import toast from 'react-hot-toast';
 
@@ -42,9 +42,13 @@ export function LoginPage() {
         className="relative w-full max-w-md mx-4"
       >
         <div className="bg-white/10 backdrop-blur-2xl border border-white/10 rounded-3xl p-8 shadow-2xl">
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-gradient-to-br from-kaboss-500 to-kaboss-700 mb-4">
-              <Shield className="h-8 w-8 text-white" />
+<div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center h-20 w-20 rounded-2xl overflow-hidden ring-2 ring-kaboss-500/40 shadow-lg shadow-kaboss-500/30 mb-4">
+              <img
+                src="/images/kabossinc%20logo.jpg"
+                alt="KABOSS Inc"
+                className="h-full w-full object-cover"
+              />
             </div>
             <h1 className="text-3xl font-bold text-white">Admin Login</h1>
             <p className="text-gray-400 mt-2">KABOSS Inc Management Panel</p>

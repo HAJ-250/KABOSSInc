@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Phone, Mail, Clock, MessageCircle, Send } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, MessageCircle, Send, Facebook, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { api } from '@/services/api';
 
 const fadeUp = {
   initial: { opacity: 0, y: 30 },
@@ -12,6 +14,43 @@ const fadeUp = {
 };
 
 export function Contact() {
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    subject: '',
+    message: '',
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [status, setStatus] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setStatus(null);
+    try {
+      await api.sendContact(form);
+      setStatus({
+        type: 'success',
+        text: 'Message sent successfully! We will get back to you as soon as possible.',
+      });
+      setForm({ name: '', email: '', phone: '', subject: '', message: '' });
+    } catch {
+      setStatus({
+        type: 'error',
+        text: 'Sorry, something went wrong. Please try again or reach us directly via phone or WhatsApp.',
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <div className="pt-20">
       <section className="relative py-32 overflow-hidden app-bg-image-fixed">
@@ -37,32 +76,89 @@ export function Contact() {
             <motion.div {...fadeUp} className="lg:col-span-2">
               <div className="p-8 rounded-3xl glass">
                 <h2 className="text-2xl font-bold mb-6">Send Us a Message</h2>
-                <form className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-2">Full Name</label>
-                      <Input placeholder="Your name" />
+                      <Input
+                        name="name"
+                        placeholder="Your name"
+                        value={form.name}
+                        onChange={handleChange}
+                        required
+                      />
                     </div>
                     <div>
                       <label className="block text-sm font-medium mb-2">Email</label>
-                      <Input type="email" placeholder="your@email.com" />
+                      <Input
+                        type="email"
+                        name="email"
+                        placeholder="your@email.com"
+                        value={form.email}
+                        onChange={handleChange}
+                        required
+                      />
                     </div>
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-2">Phone</label>
-                    <Input placeholder="+250 78X XXX XXX" />
+                    <Input
+                      name="phone"
+                      placeholder="+250 788 882 296"
+                      value={form.phone}
+                      onChange={handleChange}
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-2">Subject</label>
-                    <Input placeholder="How can we help?" />
+                    <Input
+                      name="subject"
+                      placeholder="How can we help?"
+                      value={form.subject}
+                      onChange={handleChange}
+                      required
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-2">Message</label>
-                    <Textarea placeholder="Tell us more about what you need..." />
+                    <Textarea
+                      name="message"
+                      placeholder="Tell us more about what you need..."
+                      value={form.message}
+                      onChange={handleChange}
+                      required
+                    />
                   </div>
-                  <Button type="submit" size="lg" className="w-full sm:w-auto">
-                    <Send className="mr-2 h-4 w-4" />
-                    Send Message
+
+                  {status && (
+                    <div
+                      className={`flex items-start gap-3 p-4 rounded-2xl text-sm ${
+                        status.type === 'success'
+                          ? 'bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-900'
+                          : 'bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-900'
+                      }`}
+                    >
+                      {status.type === 'success' ? (
+                        <CheckCircle className="h-5 w-5 shrink-0 mt-0.5" />
+                      ) : (
+                        <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" />
+                      )}
+                      <span>{status.text}</span>
+                    </div>
+                  )}
+
+                  <Button type="submit" size="lg" className="w-full sm:w-auto" disabled={submitting}>
+                    {submitting ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="mr-2 h-4 w-4" />
+                        Send Message
+                      </>
+                    )}
                   </Button>
                 </form>
               </div>
@@ -82,11 +178,18 @@ export function Contact() {
                   </div>
                   <div className="flex items-center gap-3">
                     <Phone className="h-5 w-5 text-kaboss-500 shrink-0" />
-                    <span className="text-sm">+250 78 XXX XXXX</span>
+                    <a href="tel:+250788882296" className="text-sm hover:text-kaboss-600 dark:hover:text-kaboss-400 transition-colors">
+                      +250 788 882 296
+                    </a>
                   </div>
                   <div className="flex items-center gap-3">
                     <Mail className="h-5 w-5 text-kaboss-500 shrink-0" />
-                    <span className="text-sm">info@kabossinc.com</span>
+                    <a
+                      href="mailto:kabbossimage@gmail.com"
+                      className="text-sm hover:text-kaboss-600 dark:hover:text-kaboss-400 transition-colors break-all"
+                    >
+                      kabbossimage@gmail.com
+                    </a>
                   </div>
                   <div className="flex items-start gap-3">
                     <Clock className="h-5 w-5 text-kaboss-500 mt-0.5 shrink-0" />
@@ -102,18 +205,30 @@ export function Contact() {
                 <h3 className="font-semibold mb-4">Emergency Contact</h3>
                 <div className="flex items-center gap-3">
                   <Phone className="h-5 w-5 text-red-500 shrink-0" />
-                  <span className="text-sm">+250 78 XXX XXXX (24/7)</span>
+                  <a href="tel:+250788882296" className="text-sm hover:text-kaboss-600 dark:hover:text-kaboss-400 transition-colors">
+                    +250 788 882 296 (24/7)
+                  </a>
                 </div>
               </div>
 
               <a
-                href="https://wa.me/25078XXXXXXXX"
+                href="https://wa.me/250788882296"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-500 text-white font-medium hover:shadow-xl transition-all"
               >
                 <MessageCircle className="h-5 w-5" />
                 Chat on WhatsApp
+              </a>
+
+              <a
+                href="https://www.facebook.com/search/top?q=Kaboss%20Image"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium hover:shadow-xl transition-all"
+              >
+                <Facebook className="h-5 w-5" />
+                Follow Kaboss Image
               </a>
             </motion.div>
           </div>
@@ -129,15 +244,14 @@ export function Contact() {
               <span className="gradient-text">Google Maps</span>
             </h2>
             <div className="aspect-[21/9] rounded-3xl overflow-hidden glass">
-              <div className="w-full h-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
-                <div className="text-center">
-                  <MapPin className="h-12 w-12 text-kaboss-500 mx-auto mb-2" />
-                  <p className="text-gray-500 dark:text-gray-400">
-                    Google Maps Integration
-                  </p>
-                  <p className="text-sm text-gray-400">Nyamasheke, Rwanda</p>
-                </div>
-              </div>
+              <iframe
+                src="https://www.google.com/maps?q=Nyamasheke%2C%20Rwanda&output=embed"
+                title="KABOSS Inc Location - Nyamasheke, Rwanda"
+                className="w-full h-full border-0"
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
             </div>
           </motion.div>
         </div>
@@ -145,3 +259,4 @@ export function Contact() {
     </div>
   );
 }
+

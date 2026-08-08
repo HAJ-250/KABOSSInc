@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Users, CalendarCheck, MessageSquare, FileText, Globe, Star, HelpCircle, Megaphone, TrendingUp, Settings } from 'lucide-react';
+import { Users, CalendarCheck, MessageSquare, FileText, Globe, Star, HelpCircle, Megaphone, TrendingUp, Settings, Image as ImageIcon } from 'lucide-react';
 import { apiRequest } from '../lib/api';
 import { getStoredUser } from '../lib/api';
 
@@ -8,6 +8,7 @@ const statCards = [
   { key: 'users', icon: Users, label: 'Total Users', color: 'from-purple-500 to-pink-500' },
   { key: 'bookings', icon: CalendarCheck, label: 'Total Bookings', color: 'from-amber-500 to-orange-500' },
   { key: 'services', icon: FileText, label: 'Services', color: 'from-kaboss-500 to-cyan-500' },
+{ key: 'gallery', icon: ImageIcon, label: 'Gallery Images', color: 'from-amber-500 to-orange-500' },
   { key: 'partners', icon: Globe, label: 'Partners', color: 'from-green-500 to-emerald-500' },
   { key: 'testimonials', icon: Star, label: 'Testimonials', color: 'from-yellow-500 to-amber-500' },
   { key: 'faqs', icon: HelpCircle, label: 'FAQs', color: 'from-teal-500 to-cyan-500' },

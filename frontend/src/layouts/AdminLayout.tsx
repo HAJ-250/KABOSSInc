@@ -4,10 +4,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard, CalendarCheck, MessageSquare, Users, Image,
   FileText, Settings, LogOut, Menu, X, ChevronDown, Home,
-  BarChart3, Bell, Shield, Globe,
+  BarChart3, Bell, Shield, Globe, Moon, Sun,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/AuthContext';
+import { useThemeStore } from '@/store/useThemeStore';
 import toast from 'react-hot-toast';
 
 const navItems = [
@@ -27,7 +28,8 @@ export function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const location = useLocation();
-  const { user, logout } = useAuth();
+const { user, logout } = useAuth();
+  const { isDarkMode, toggleDarkMode } = useThemeStore();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -106,7 +108,14 @@ export function AdminLayout() {
               <Menu className="h-5 w-5" />
             </button>
 
-            <div className="flex items-center gap-4 ml-auto">
+<div className="flex items-center gap-4 ml-auto">
+              <button
+                onClick={toggleDarkMode}
+                className="h-10 w-10 rounded-xl flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                aria-label="Toggle dark mode"
+              >
+                {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              </button>
               <Link to="/admin/announcements" className="relative p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800">
                 <Bell className="h-5 w-5" />
                 <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-red-500" />

@@ -13,7 +13,10 @@ export interface BookingAttributes {
   date: string;
   time?: string;
   location?: string;
-  status: 'pending' | 'approved' | 'in-progress' | 'completed' | 'cancelled';
+  amount?: number;
+  amountCurrency?: string;
+  paymentStatus?: 'PENDING' | 'SUCCESS' | 'FAILED' | 'CANCELLED' | 'NO_PAYMENT';
+  status: 'pending' | 'pending-payment' | 'confirmed' | 'approved' | 'in-progress' | 'completed' | 'cancelled';
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -27,7 +30,10 @@ class Booking extends Model<BookingAttributes> implements BookingAttributes {
   declare date: string;
   declare time?: string;
   declare location?: string;
-  declare status: 'pending' | 'approved' | 'in-progress' | 'completed' | 'cancelled';
+  declare amount?: number;
+  declare amountCurrency?: string;
+  declare paymentStatus?: 'PENDING' | 'SUCCESS' | 'FAILED' | 'CANCELLED' | 'NO_PAYMENT';
+  declare status: 'pending' | 'pending-payment' | 'confirmed' | 'approved' | 'in-progress' | 'completed' | 'cancelled';
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 
@@ -69,12 +75,26 @@ Booking.init(
       type: DataTypes.STRING(255),
       allowNull: true,
     },
-    location: {
+location: {
       type: DataTypes.STRING(255),
       allowNull: true,
     },
+    amount: {
+      type: DataTypes.DECIMAL(12, 0),
+      allowNull: true,
+    },
+    amountCurrency: {
+      type: DataTypes.STRING(8),
+      allowNull: true,
+      defaultValue: 'RWF',
+    },
+    paymentStatus: {
+      type: DataTypes.ENUM('PENDING', 'SUCCESS', 'FAILED', 'CANCELLED', 'NO_PAYMENT'),
+      allowNull: true,
+      defaultValue: 'NO_PAYMENT',
+    },
     status: {
-      type: DataTypes.ENUM('pending', 'approved', 'in-progress', 'completed', 'cancelled'),
+      type: DataTypes.ENUM('pending', 'pending-payment', 'confirmed', 'approved', 'in-progress', 'completed', 'cancelled'),
       defaultValue: 'pending',
     },
   },

@@ -10,6 +10,7 @@ export interface UserAttributes {
   displayName: string;
   role: 'customer' | 'admin';
   phone?: string;
+  profilePictureUrl?: string;
   emailVerified?: boolean;
   isActive?: boolean;
   createdAt?: Date;
@@ -24,6 +25,7 @@ class User extends Model<UserAttributes> implements UserAttributes {
   declare displayName: string;
   declare role: 'customer' | 'admin';
   declare phone?: string;
+  declare profilePictureUrl?: string;
   declare emailVerified: boolean;
   declare isActive: boolean;
   declare readonly createdAt: Date;
@@ -65,8 +67,12 @@ User.init(
       type: DataTypes.ENUM('customer', 'admin'),
       defaultValue: 'customer',
     },
-    phone: {
+phone: {
       type: DataTypes.STRING(255),
+      allowNull: true,
+    },
+    profilePictureUrl: {
+      type: DataTypes.STRING(512),
       allowNull: true,
     },
     emailVerified: {

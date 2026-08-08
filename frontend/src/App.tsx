@@ -7,6 +7,8 @@ import { MainLayout } from '@/components/layout/MainLayout';
 import { Home } from '@/pages/Home';
 import { About } from '@/pages/About';
 import { Services } from '@/pages/Services';
+import { ServiceDetail } from '@/pages/ServiceDetail';
+import { QuotePage } from '@/pages/QuotePage';
 import { Gallery } from '@/pages/Gallery';
 import { Partners } from '@/pages/Partners';
 import { Testimonials } from '@/pages/Testimonials';
@@ -22,18 +24,22 @@ import { ForgotPassword } from '@/pages/auth/ForgotPassword';
 import { DashboardLayout } from '@/layouts/DashboardLayout';
 import { DashboardOverview } from '@/pages/dashboard/Overview';
 import { DashboardBookings } from '@/pages/dashboard/Bookings';
+import { DashboardQuotes } from '@/pages/dashboard/Quotes';
 import { DashboardMessages } from '@/pages/dashboard/Messages';
 import { DashboardDownloads } from '@/pages/dashboard/Downloads';
 import { DashboardNotifications } from '@/pages/dashboard/Notifications';
 import { DashboardProfile } from '@/pages/dashboard/Profile';
 import { DashboardSettings } from '@/pages/dashboard/Settings';
+import { DashboardPayments } from '@/pages/dashboard/Payments';
 import { AdminLayout } from '@/layouts/AdminLayout';
 import { AdminDashboard } from '@/pages/admin/Dashboard';
 import { AdminBookings } from '@/pages/admin/AdminBookings';
 import { AdminContent } from '@/pages/admin/AdminContent';
+import { AdminGallery } from '@/pages/admin/AdminGallery';
 import { AuthProvider } from '@/context/AuthContext';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { useThemeStore } from '@/store/useThemeStore';
+import { I18nProvider } from '@/i18n';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -61,6 +67,7 @@ function ThemeInit() {
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <I18nProvider>
       <BrowserRouter>
         <ThemeInit />
         <InitialLoader />
@@ -71,6 +78,8 @@ export default function App() {
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
               <Route path="/services" element={<Services />} />
+              <Route path="/services/:serviceId" element={<ServiceDetail />} />
+              <Route path="/services/:serviceId/quote" element={<QuotePage />} />
               <Route path="/gallery" element={<Gallery />} />
               <Route path="/partners" element={<Partners />} />
               <Route path="/testimonials" element={<Testimonials />} />
@@ -90,9 +99,12 @@ export default function App() {
             <Route element={<ProtectedRoute />}>
               <Route element={<DashboardLayout />}>
                 <Route path="/dashboard" element={<DashboardOverview />} />
-                <Route path="/dashboard/bookings" element={<DashboardBookings />} />
+<Route path="/dashboard/bookings" element={<DashboardBookings />} />
+<Route path="/dashboard/quotes" element={<DashboardQuotes />} />
+                <Route path="/dashboard/payments" element={<DashboardPayments />} />
                 <Route path="/dashboard/messages" element={<DashboardMessages />} />
-                <Route path="/dashboard/downloads" element={<DashboardDownloads />} />
+<Route path="/dashboard/downloads" element={<DashboardDownloads />} />
+                <Route path="/dashboard/gallery" element={<Gallery />} />
                 <Route path="/dashboard/notifications" element={<DashboardNotifications />} />
                 <Route path="/dashboard/profile" element={<DashboardProfile />} />
                 <Route path="/dashboard/settings" element={<DashboardSettings />} />
@@ -105,7 +117,7 @@ export default function App() {
                 <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/admin/bookings" element={<AdminBookings />} />
                 <Route path="/admin/messages" element={<AdminBookings />} />
-                <Route path="/admin/gallery" element={<AdminBookings />} />
+<Route path="/admin/gallery" element={<AdminGallery />} />
                 <Route path="/admin/content" element={<AdminContent />} />
                 <Route path="/admin/analytics" element={<AdminDashboard />} />
                 <Route path="/admin/announcements" element={<AdminDashboard />} />
@@ -120,7 +132,7 @@ export default function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
-      </BrowserRouter>
+</BrowserRouter>
       <Toaster
         position="top-right"
         toastOptions={{
@@ -132,6 +144,7 @@ export default function App() {
           },
         }}
       />
+      </I18nProvider>
     </QueryClientProvider>
   );
 }

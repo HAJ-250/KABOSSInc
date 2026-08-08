@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { MapPin, Clock, Phone, Mail, Target, Eye, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { useI18n } from '@/i18n';
 
 const fadeUp = {
   initial: { opacity: 0, y: 30 },
@@ -10,14 +11,15 @@ const fadeUp = {
   transition: { duration: 0.6 },
 };
 
-const values = [
-  { icon: Heart, title: 'Integrity', desc: 'We conduct our business with honesty and transparency.' },
-  { icon: Target, title: 'Excellence', desc: 'We strive for the highest quality in every service we provide.' },
-  { icon: Eye, title: 'Innovation', desc: 'We embrace modern technology and creative solutions.' },
-];
-
 export function About() {
-  return (
+  const { t } = useI18n();
+
+  const values = [
+    { icon: Heart, title: t('about.values[0].title'), desc: t('about.values[0].desc') },
+    { icon: Target, title: t('about.values[1].title'), desc: t('about.values[1].desc') },
+    { icon: Eye, title: t('about.values[2].title'), desc: t('about.values[2].desc') },
+  ];
+return (
     <div className="pt-20">
       {/* Hero */}
       <section className="relative py-32 overflow-hidden app-bg-image-fixed">
@@ -30,13 +32,13 @@ export function About() {
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
-              About{' '}
+              {t('about.title')}{' '}
               <span className="bg-gradient-to-r from-kaboss-400 to-premium-gold bg-clip-text text-transparent">
-                KABOSS Inc
+                {t('about.highlight')}
               </span>
             </h1>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Discover our story, mission, and the passion that drives us to serve our community
+              {t('about.subtitle')}
             </p>
           </motion.div>
         </div>
@@ -48,27 +50,16 @@ export function About() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <motion.div {...fadeUp}>
               <span className="text-kaboss-600 dark:text-kaboss-400 font-medium text-sm tracking-wider uppercase">
-                Our Story
+                {t('about.ourStory')}
               </span>
               <h2 className="text-4xl font-bold mt-3 mb-6">
-                The{' '}
-                <span className="gradient-text">KABOSS</span> Journey
+                {t('about.journey')}{' '}
+                <span className="gradient-text">{t('about.journeyHighlight')}</span>
               </h2>
               <div className="space-y-4 text-gray-600 dark:text-gray-300 leading-relaxed">
-                <p>
-                  KABOSS Inc was founded with a simple vision: to provide the Nyamasheke community with 
-                  access to professional, high-quality business services all under one roof.
-                </p>
-                <p>
-                  Located in the heart of Ruharambuga Sector, Ntendezi Cell, Kakiru Village, we have grown 
-                  from a small printing shop into a comprehensive multi-service business center serving 
-                  hundreds of satisfied clients across Rwanda.
-                </p>
-                <p>
-                  Our team combines years of experience with a passion for excellence, ensuring that every 
-                  project — whether it's a wedding invitation, a corporate brochure, or a sound system setup 
-                  for a special event — receives the utmost attention to detail and quality.
-                </p>
+                <p>{t('about.story1')}</p>
+                <p>{t('about.story2')}</p>
+                <p>{t('about.story3')}</p>
               </div>
             </motion.div>
             <motion.div
@@ -80,7 +71,7 @@ export function About() {
               <div className="aspect-square rounded-3xl bg-gradient-to-br from-kaboss-500/20 to-premium-gold/20 border border-white/20 backdrop-blur-xl flex items-center justify-center overflow-hidden">
                 <div className="w-full h-full">
                   <img
-                    src="/images/profile.jpg"
+                    src="/uploads/profile/1783354105972-bbf27ec5555f78.jpg"
                     alt="KABOSS Inc Profile"
                     className="w-full h-full object-cover"
                   />
@@ -99,10 +90,9 @@ export function About() {
               <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-kaboss-500 to-cyan-500 flex items-center justify-center mx-auto mb-6">
                 <Target className="h-8 w-8 text-white" />
               </div>
-              <h3 className="text-2xl font-bold mb-4">Our Mission</h3>
+<h3 className="text-2xl font-bold mb-4">{t('about.mission')}</h3>
               <p className="text-gray-500 dark:text-gray-400">
-                To provide accessible, high-quality business services that empower individuals and 
-                organizations in our community to achieve their goals.
+                {t('about.missionText')}
               </p>
             </motion.div>
 
@@ -110,10 +100,9 @@ export function About() {
               <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-premium-gold to-amber-500 flex items-center justify-center mx-auto mb-6">
                 <Eye className="h-8 w-8 text-white" />
               </div>
-              <h3 className="text-2xl font-bold mb-4">Our Vision</h3>
+              <h3 className="text-2xl font-bold mb-4">{t('about.vision')}</h3>
               <p className="text-gray-500 dark:text-gray-400">
-                To be the leading multi-service business center in Rwanda, recognized for excellence, 
-                innovation, and outstanding customer service.
+                {t('about.visionText')}
               </p>
             </motion.div>
 
@@ -121,7 +110,7 @@ export function About() {
               <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center mx-auto mb-6">
                 <Heart className="h-8 w-8 text-white" />
               </div>
-              <h3 className="text-2xl font-bold mb-4">Core Values</h3>
+              <h3 className="text-2xl font-bold mb-4">{t('about.coreValues')}</h3>
               <ul className="text-gray-500 dark:text-gray-400 space-y-2">
                 {values.map((v) => (
                   <li key={v.title} className="flex items-center gap-2 justify-center">
@@ -142,14 +131,14 @@ export function About() {
           <div className="grid lg:grid-cols-2 gap-12">
             <motion.div {...fadeUp} className="p-8 rounded-3xl glass">
               <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
-                <Clock className="h-6 w-6 text-kaboss-500" />
-                Business Hours
+<Clock className="h-6 w-6 text-kaboss-500" />
+                {t('about.businessHours')}
               </h3>
               <div className="space-y-3">
-                {[
-                  { day: 'Monday - Friday', hours: '8:00 AM - 6:00 PM' },
-                  { day: 'Saturday', hours: '8:00 AM - 6:00 PM' },
-                  { day: 'Sunday', hours: '9:00 AM - 2:00 PM' },
+{[
+                  { day: t('about.dayMonFri'), hours: t('about.hoursMonFri') },
+                  { day: t('about.daySat'), hours: t('about.hoursSat') },
+                  { day: t('about.daySun'), hours: t('about.hoursSun') },
                 ].map((s) => (
                   <div key={s.day} className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-800 last:border-0">
                     <span className="font-medium">{s.day}</span>
@@ -162,27 +151,25 @@ export function About() {
             <motion.div {...fadeUp} className="p-8 rounded-3xl glass">
               <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
                 <MapPin className="h-6 w-6 text-kaboss-500" />
-                Our Location
+                {t('about.ourLocation')}
               </h3>
               <div className="space-y-4 text-gray-600 dark:text-gray-300">
                 <div className="flex items-start gap-3">
                   <MapPin className="h-5 w-5 text-kaboss-500 mt-0.5 shrink-0" />
                   <div>
-                    <p className="font-medium">Nyamasheke District</p>
-                    <p>Ruharambuga Sector, Ntendezi Cell</p>
-                    <p>Kakiru Village, Rwanda</p>
+                    <p className="font-medium">{t('footer.address')}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <Phone className="h-5 w-5 text-kaboss-500 shrink-0" />
-                  <span>+250 78 XXX XXXX</span>
+                  <a href="tel:+250788882296" className="hover:text-kaboss-600 dark:hover:text-kaboss-400 transition-colors">+250 788 882 296</a>
                 </div>
                 <div className="flex items-center gap-3">
                   <Mail className="h-5 w-5 text-kaboss-500 shrink-0" />
-                  <span>info@kabossinc.com</span>
+                  <a href="mailto:kabbossimage@gmail.com" className="hover:text-kaboss-600 dark:hover:text-kaboss-400 transition-colors">kabbossimage@gmail.com</a>
                 </div>
                 <Link to="/contact">
-                  <Button className="mt-4">Get Directions</Button>
+                  <Button className="mt-4">{t('about.getDirections')}</Button>
                 </Link>
               </div>
             </motion.div>

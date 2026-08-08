@@ -33,6 +33,14 @@ Message.init({
         type: DataTypes.BOOLEAN,
         defaultValue: false,
     },
+    deliveredAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+    },
+    seenAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+    },
 }, {
     sequelize,
     modelName: 'Message',

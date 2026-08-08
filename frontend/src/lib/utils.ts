@@ -37,3 +37,26 @@ export function slugify(str: string): string {
 export function generateId(): string {
   return Math.random().toString(36).substring(2, 15);
 }
+
+/**
+ * Resolve a relative /uploads/... URL to a fully-qualified URL that works in
+ * both dev (Vite proxy) and production. In production, images are served by
+ * the backend on its own port/host, so we prefix the API origin.
+ */
+export function resolveImageUrl(url: string): string {
+  if (!url) return url;
+  // Already absolute (http/https/data/blob) - use as-is
+  if (/^(https?:|data:|blob:|\/\/)/i.test(url)) return url;
+  // Public assets already served by the frontend - use as-is
+  if (url.startsWith('/images/')) return url;
+// Relative uploads path - resolve against the backend origin directly.
+  // This works in dev (backend on :3001) in addition to the Vite proxy, and in
+  // production when VITE_API_URL points to the backend.
+  if (url.startsWith('/uploads/')) {
+    const base = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+    // Strip any trailing /api path and trailing slash so we get the bare origin.
+    const apiOrigin = base.replace(/\/+$/, '').replace(/\/api$/, '');
+    return `${apiOrigin}${url}`;
+  }
+  return url;
+}

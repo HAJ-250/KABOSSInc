@@ -8,7 +8,8 @@ CREATE TABLE IF NOT EXISTS `Users` (
   `password` VARCHAR(255) NOT NULL,
   `displayName` VARCHAR(255) NOT NULL,
   `role` ENUM('customer','admin') NOT NULL DEFAULT 'customer',
-  `phone` VARCHAR(255) NULL DEFAULT NULL,
+`phone` VARCHAR(255) NULL DEFAULT NULL,
+  `profilePictureUrl` VARCHAR(512) NULL DEFAULT NULL,
   `emailVerified` TINYINT(1) NOT NULL DEFAULT '0',
   `isActive` TINYINT(1) NOT NULL DEFAULT '1',
   `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -39,6 +40,21 @@ CREATE TABLE IF NOT EXISTS `Bookings` (
   `time` VARCHAR(255) NULL DEFAULT NULL,
   `location` VARCHAR(255) NULL DEFAULT NULL,
   `status` ENUM('pending','approved','in-progress','completed','cancelled') NOT NULL DEFAULT 'pending',
+  `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `userId` (`userId`),
+  INDEX `serviceId` (`serviceId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `Quotes` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `userId` INT UNSIGNED NOT NULL,
+  `serviceId` INT UNSIGNED NOT NULL,
+  `serviceName` VARCHAR(255) NOT NULL,
+  `budget` VARCHAR(255) NULL DEFAULT NULL,
+  `details` TEXT NOT NULL,
+  `status` ENUM('pending','reviewing','quoted','accepted','declined') NOT NULL DEFAULT 'pending',
   `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -78,9 +94,29 @@ CREATE TABLE IF NOT EXISTS `Messages` (
   `senderName` VARCHAR(255) NULL DEFAULT NULL,
   `content` TEXT NOT NULL,
   `isRead` TINYINT(1) NOT NULL DEFAULT '0',
+  `deliveredAt` DATETIME NULL DEFAULT NULL,
+  `seenAt` DATETIME NULL DEFAULT NULL,
   `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
+  INDEX `conversationId` (`conversationId`),
+  INDEX `senderId` (`senderId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `Attachments` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `messageId` INT UNSIGNED NOT NULL,
+  `conversationId` INT UNSIGNED NOT NULL,
+  `senderId` INT UNSIGNED NOT NULL,
+  `fileName` VARCHAR(255) NOT NULL,
+  `fileType` ENUM('image','pdf','zip','document','other') NOT NULL DEFAULT 'other',
+  `mimeType` VARCHAR(255) NOT NULL,
+  `storagePath` TEXT NOT NULL,
+  `size` BIGINT UNSIGNED NOT NULL DEFAULT '0',
+  `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `messageId` (`messageId`),
   INDEX `conversationId` (`conversationId`),
   INDEX `senderId` (`senderId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

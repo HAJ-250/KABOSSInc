@@ -2,6 +2,7 @@ import { Router, Response } from 'express';
 import { Op } from 'sequelize';
 import User from '../models/User.js';
 import Booking from '../models/Booking.js';
+import Quote from '../models/Quote.js';
 import Message from '../models/Message.js';
 import Contact from '../models/Contact.js';
 import Settings from '../models/Settings.js';
@@ -10,6 +11,7 @@ import Partner from '../models/Partner.js';
 import Testimonial from '../models/Testimonial.js';
 import FAQ from '../models/FAQ.js';
 import Announcement from '../models/Announcement.js';
+import Payment from '../models/Payment.js';
 import { verifyTokenMiddleware, requireAdmin, AuthenticatedRequest } from '../middleware/auth.js';
 import { z } from 'zod';
 
@@ -27,11 +29,25 @@ const settingsSchema = z.object({
 
 router.get('/stats', async (_req: AuthenticatedRequest, res: Response) => {
   try {
-    const [users, bookings, messages, contacts, services, partners, testimonials, faqs, announcements] = await Promise.all([
+    const [users, bookings, messages, contacts, services, partners, testimonials, faqs, announcements, payments, successfulPayments] = await Promise.all([
       User.count(), Booking.count(), Message.count(), Contact.count(),
       Service.count(), Partner.count(), Testimonial.count(), FAQ.count(), Announcement.count(),
+      Payment.count(), Payment.count({ where: { paymentStatus: 'SUCCESS' } }),
     ]);
-    res.json({ users, bookings, messages, contacts, services, partners, testimonials, faqs, announcements });
+
+    // Count gallery images from settings
+    let gallery = 0;
+    const settingsRec = await Settings.findOne({ where: { key: 'general' } });
+    if (settingsRec?.value) {
+      try {
+        const settings = JSON.parse(settingsRec.value);
+        gallery = Array.isArray(settings.galleryImages) ? settings.galleryImages.length : 0;
+      } catch {
+        gallery = 0;
+      }
+    }
+
+    res.json({ users, bookings, messages, contacts, services, partners, testimonials, faqs, announcements, gallery, payments, successfulPayments });
   } catch (error) { console.error('Failed to fetch stats:', error); res.status(500).json({ error: 'Failed to fetch stats' }); }
 });
 
@@ -149,6 +165,30 @@ router.delete('/services/:id', async (req: AuthenticatedRequest, res: Response) 
     await Service.destroy({ where: { id: req.params.id } });
     res.json({ message: 'Service deleted' });
   } catch (error) { console.error('Failed to delete service:', error); res.status(500).json({ error: 'Failed to delete service' }); }
+});
+
+// --- Quotes ---
+router.get('/quotes', async (_req: AuthenticatedRequest, res: Response) => {
+  try {
+    const quotes = await Quote.findAll({ order: [['createdAt', 'DESC']] });
+    res.json(quotes);
+  } catch (error) { console.error('Failed to fetch quotes:', error); res.status(500).json({ error: 'Failed to fetch quotes' }); }
+});
+
+router.patch('/quotes/:id', async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    await Quote.update(req.body, { where: { id: req.params.id } });
+    const quote = await Quote.findByPk(req.params.id);
+    if (!quote) return res.status(404).json({ error: 'Quote not found' });
+    res.json(quote);
+  } catch (error) { console.error('Failed to update quote:', error); res.status(500).json({ error: 'Failed to update quote' }); }
+});
+
+router.delete('/quotes/:id', async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    await Quote.destroy({ where: { id: req.params.id } });
+    res.json({ message: 'Quote deleted' });
+  } catch (error) { console.error('Failed to delete quote:', error); res.status(500).json({ error: 'Failed to delete quote' }); }
 });
 
 router.get('/partners', async (_req: AuthenticatedRequest, res: Response) => {

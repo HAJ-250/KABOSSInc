@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -14,6 +14,8 @@ export function Login() {
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirect = searchParams.get('redirect');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +23,11 @@ export function Login() {
     try {
       await login(email, password);
       toast.success('Welcome back!');
-      navigate('/dashboard');
+      if (redirect) {
+        navigate(decodeURIComponent(redirect));
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err: any) {
       toast.error(err.message || 'Login failed');
     } finally {
@@ -40,10 +46,14 @@ export function Login() {
         className="relative w-full max-w-md mx-4"
       >
         <div className="bg-white/10 backdrop-blur-2xl border border-white/10 rounded-3xl p-8 shadow-2xl">
-          <div className="text-center mb-8">
+<div className="text-center mb-8">
             <Link to="/" className="inline-flex items-center gap-2 mb-6">
-              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-kaboss-500 to-kaboss-700 flex items-center justify-center">
-                <span className="text-white font-bold">K</span>
+              <div className="h-14 w-14 rounded-2xl overflow-hidden ring-2 ring-kaboss-500/40 shadow-lg shadow-kaboss-500/30">
+                <img
+                  src="/images/kabossinc%20logo.jpg"
+                  alt="KABOSS Inc"
+                  className="h-full w-full object-cover"
+                />
               </div>
             </Link>
             <h1 className="text-3xl font-bold text-white">Welcome Back</h1>

@@ -9,6 +9,8 @@ export interface MessageAttributes {
   senderName?: string;
   content: string;
   isRead?: boolean;
+  deliveredAt?: Date | null;
+  seenAt?: Date | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -20,6 +22,8 @@ class Message extends Model<MessageAttributes> implements MessageAttributes {
   declare senderName?: string;
   declare content: string;
   declare isRead: boolean;
+  declare deliveredAt?: Date | null;
+  declare seenAt?: Date | null;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 
@@ -53,9 +57,17 @@ Message.init(
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    isRead: {
+isRead: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
+    },
+    deliveredAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    seenAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
     },
   },
   {

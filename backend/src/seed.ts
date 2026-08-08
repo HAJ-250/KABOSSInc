@@ -9,25 +9,46 @@ import Announcement from './models/Announcement.js';
 import Settings from './models/Settings.js';
 
 async function seed() {
-  console.log('Connecting to MySQL...');
+  console.log('Connecting to database...');
   await initDatabase();
+
 
   console.log('Seeding data...');
 
   const existingAdmin = await User.findOne({ where: { username: 'kabossInc' } });
-  if (!existingAdmin) {
+  // Also guard by unique email so repeated runs don't crash with ER_DUP_ENTRY.
+  const existingAdminByEmail = await User.findOne({ where: { email: 'admin@kabossinc.com' } });
+
+  const desiredAdmin = {
+    username: 'kabossInc',
+    email: 'admin@kabossinc.com',
+    passwordHash: await bcrypt.hash('kaboss123!', 10),
+    displayName: 'Super Admin',
+    role: 'admin' as const,
+    emailVerified: true,
+  };
+
+  if (!existingAdmin && !existingAdminByEmail) {
     await User.create({
-      username: 'kabossInc',
-      email: 'admin@kabossinc.com',
-      password: await bcrypt.hash('kaboss123!', 10),
-      displayName: 'Super Admin',
-      role: 'admin',
-      emailVerified: true,
+      username: desiredAdmin.username,
+      email: desiredAdmin.email,
+      password: desiredAdmin.passwordHash,
+      displayName: desiredAdmin.displayName,
+      role: desiredAdmin.role,
+      emailVerified: desiredAdmin.emailVerified,
     });
     console.log('  Created admin: kabossInc (password: kaboss123!)');
   } else {
-    console.log('  Admin already exists, skipping');
+    const adminToUpdate = existingAdmin ?? existingAdminByEmail;
+    adminToUpdate!.password = desiredAdmin.passwordHash;
+    adminToUpdate!.displayName = desiredAdmin.displayName;
+    adminToUpdate!.role = desiredAdmin.role;
+    adminToUpdate!.emailVerified = desiredAdmin.emailVerified;
+    await adminToUpdate!.save();
+    console.log('  Updated admin password to: kaboss123!');
   }
+
+
 
   const services = [
     { title: 'Wedding Invitations', category: 'printing', description: 'Beautiful custom wedding invitation printing' },
@@ -101,14 +122,15 @@ async function seed() {
     await Settings.create({
       key: 'general',
       value: JSON.stringify({
+
         heroTitle: 'Your Trusted Multi-Service Business Center',
         heroSubtitle: 'From printing to photography, we bring your ideas to life.',
         mission: 'To provide accessible, high-quality business services that empower our community.',
         vision: 'To be the leading multi-service business center in Rwanda.',
         coreValues: ['Integrity', 'Excellence', 'Innovation', 'Customer Focus'],
         businessHours: { monday: '8:00 AM - 6:00 PM', tuesday: '8:00 AM - 6:00 PM', wednesday: '8:00 AM - 6:00 PM', thursday: '8:00 AM - 6:00 PM', friday: '8:00 AM - 6:00 PM', saturday: '8:00 AM - 6:00 PM', sunday: '9:00 AM - 2:00 PM' },
-        contact: { phone: '+250 78 XXX XXXX', email: 'info@kabossinc.com', whatsapp: '+250 78 XXX XXXX', address: 'Nyamasheke District, Ruharambuga Sector, Ntendezi Cell, Kakiru Village, Rwanda' },
-        socialMedia: { facebook: '#', instagram: '#', whatsapp: '#' },
+        contact: { phone: '+250 788 882 296', email: 'kabbossimage@gmail.com', whatsapp: '+250 788 882 296', address: 'Nyamasheke District, Ruharambuga Sector, Ntendezi Cell, Kakiru Village, Rwanda' },
+        socialMedia: { facebook: 'https://www.facebook.com/search/top?q=Kaboss%20Image', instagram: '#', whatsapp: 'https://wa.me/250788882296' },
         seo: { title: 'KABOSS Inc - Multi-Service Business Center', description: 'Premium printing, design, photography & digital services in Nyamasheke, Rwanda.', keywords: 'KABOSS, printing, graphic design, photography, sound system, Rwanda, Nyamasheke' },
       }),
     });

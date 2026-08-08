@@ -10,11 +10,17 @@ import {
 
 export interface ServiceData {
   id: string;
+  /** Translation key prefix, e.g. 'services.printing' */
+  key: string;
   title: string;
+  titleKey: string;
   description: string;
+  descriptionKey: string;
   icon: LucideIcon;
   category: string;
+  categoryKey: string;
   items: string[];
+  itemsKeys: string[];
   color: string;
   gradient: string;
   image?: string;
@@ -23,10 +29,15 @@ export interface ServiceData {
 export const services: ServiceData[] = [
   {
     id: 'printing',
+    key: 'services.printing',
     title: 'Printing Services',
+    titleKey: 'services.printing.title',
     description: 'Professional printing solutions for all your personal and business needs. From elegant invitations to business documents.',
+    descriptionKey: 'services.printing.description',
     icon: Printer,
     category: 'printing',
+    categoryKey: 'services.cat.printing',
+    image: '/uploads/services/printing.jpg',
     color: 'from-blue-500 to-cyan-500',
     gradient: 'bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30',
     items: [
@@ -44,13 +55,33 @@ export const services: ServiceData[] = [
       'Laminating',
       'Spiral Binding',
     ],
+    itemsKeys: [
+      'services.printing.items[0]',
+      'services.printing.items[1]',
+      'services.printing.items[2]',
+      'services.printing.items[3]',
+      'services.printing.items[4]',
+      'services.printing.items[5]',
+      'services.printing.items[6]',
+      'services.printing.items[7]',
+      'services.printing.items[8]',
+      'services.printing.items[9]',
+      'services.printing.items[10]',
+      'services.printing.items[11]',
+      'services.printing.items[12]',
+    ],
   },
   {
     id: 'graphic-design',
+    key: 'services.graphicDesign',
     title: 'Graphic Design',
+    titleKey: 'services.graphicDesign.title',
     description: 'Creative design solutions that bring your vision to life. Professional branding and visual communication.',
+    descriptionKey: 'services.graphicDesign.description',
     icon: Palette,
     category: 'graphic-design',
+    categoryKey: 'services.cat.graphicDesign',
+    image: '/uploads/services/1783354105972-bbf27ec5555f78.jpg',
     color: 'from-purple-500 to-pink-500',
     gradient: 'bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30',
     items: [
@@ -64,13 +95,29 @@ export const services: ServiceData[] = [
       'Certificates',
       'Social Media Posters',
     ],
+    itemsKeys: [
+      'services.graphicDesign.items[0]',
+      'services.graphicDesign.items[1]',
+      'services.graphicDesign.items[2]',
+      'services.graphicDesign.items[3]',
+      'services.graphicDesign.items[4]',
+      'services.graphicDesign.items[5]',
+      'services.graphicDesign.items[6]',
+      'services.graphicDesign.items[7]',
+      'services.graphicDesign.items[8]',
+    ],
   },
   {
     id: 'photography',
+    key: 'services.photography',
     title: 'Photography',
+    titleKey: 'services.photography.title',
     description: 'Capture your precious moments with professional photography services for every occasion.',
+    descriptionKey: 'services.photography.description',
     icon: Camera,
     category: 'photography',
+    categoryKey: 'services.cat.photography',
+    image: '/uploads/services/1783360200082-3b5bd59730c76.jpg',
     color: 'from-amber-500 to-orange-500',
     gradient: 'bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30',
     items: [
@@ -82,13 +129,27 @@ export const services: ServiceData[] = [
       'Outdoor Photoshoots',
       'Event Photography',
     ],
+    itemsKeys: [
+      'services.photography.items[0]',
+      'services.photography.items[1]',
+      'services.photography.items[2]',
+      'services.photography.items[3]',
+      'services.photography.items[4]',
+      'services.photography.items[5]',
+      'services.photography.items[6]',
+    ],
   },
   {
     id: 'sound-system',
+    key: 'services.soundSystem',
     title: 'Sound System',
+    titleKey: 'services.soundSystem.title',
     description: 'Premium sound system rental for events of all sizes. Crystal clear audio for unforgettable experiences.',
+    descriptionKey: 'services.soundSystem.description',
     icon: Volume2,
     category: 'sound-system',
+    categoryKey: 'services.cat.soundSystem',
+    image: '/uploads/services/sound.jpg',
     color: 'from-green-500 to-emerald-500',
     gradient: 'bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30',
     items: [
@@ -100,13 +161,27 @@ export const services: ServiceData[] = [
       'Conferences',
       'Corporate Events',
     ],
+    itemsKeys: [
+      'services.soundSystem.items[0]',
+      'services.soundSystem.items[1]',
+      'services.soundSystem.items[2]',
+      'services.soundSystem.items[3]',
+      'services.soundSystem.items[4]',
+      'services.soundSystem.items[5]',
+      'services.soundSystem.items[6]',
+    ],
   },
   {
     id: 'digital-services',
+    key: 'services.digitalServices',
     title: 'Digital Services',
+    titleKey: 'services.digitalServices.title',
     description: 'Comprehensive digital assistance to help you navigate the modern online world with ease.',
+    descriptionKey: 'services.digitalServices.description',
     icon: Monitor,
     category: 'digital-services',
+    categoryKey: 'services.cat.digitalServices',
+    image: '/uploads/services/digital.jpg',
     color: 'from-red-500 to-rose-500',
     gradient: 'bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-950/30 dark:to-rose-950/30',
     items: [
@@ -116,13 +191,25 @@ export const services: ServiceData[] = [
       'Internet Assistance',
       'Email Assistance',
     ],
+    itemsKeys: [
+      'services.digitalServices.items[0]',
+      'services.digitalServices.items[1]',
+      'services.digitalServices.items[2]',
+      'services.digitalServices.items[3]',
+      'services.digitalServices.items[4]',
+    ],
   },
   {
     id: 'irembo-assistance',
+    key: 'services.iremboAssistance',
     title: 'Irembo Assistance',
+    titleKey: 'services.iremboAssistance.title',
     description: 'We assist you in accessing government services through the Irembo platform. Quick, reliable, and professional guidance.',
+    descriptionKey: 'services.iremboAssistance.description',
     icon: Globe,
     category: 'irembo-assistance',
+    categoryKey: 'services.cat.iremboAssistance',
+    image: '/uploads/services/irembo.jpg',
     color: 'from-teal-500 to-emerald-500',
     gradient: 'bg-gradient-to-br from-teal-50 to-emerald-50 dark:from-teal-950/30 dark:to-emerald-950/30',
     items: [
@@ -132,15 +219,22 @@ export const services: ServiceData[] = [
       'Status Tracking Help',
       'Form Filling Support',
     ],
+    itemsKeys: [
+      'services.iremboAssistance.items[0]',
+      'services.iremboAssistance.items[1]',
+      'services.iremboAssistance.items[2]',
+      'services.iremboAssistance.items[3]',
+      'services.iremboAssistance.items[4]',
+    ],
   },
 ];
 
 export const serviceCategories = [
-  { id: 'all', label: 'All Services' },
-  { id: 'printing', label: 'Printing' },
-  { id: 'graphic-design', label: 'Graphic Design' },
-  { id: 'photography', label: 'Photography' },
-  { id: 'sound-system', label: 'Sound System' },
-  { id: 'digital-services', label: 'Digital Services' },
-  { id: 'irembo-assistance', label: 'Irembo Assistance' },
+  { id: 'all', label: 'All Services', labelKey: 'services.all' },
+  { id: 'printing', label: 'Printing', labelKey: 'services.cat.printing' },
+  { id: 'graphic-design', label: 'Graphic Design', labelKey: 'services.cat.graphicDesign' },
+  { id: 'photography', label: 'Photography', labelKey: 'services.cat.photography' },
+  { id: 'sound-system', label: 'Sound System', labelKey: 'services.cat.soundSystem' },
+  { id: 'digital-services', label: 'Digital Services', labelKey: 'services.cat.digitalServices' },
+  { id: 'irembo-assistance', label: 'Irembo Assistance', labelKey: 'services.cat.iremboAssistance' },
 ];

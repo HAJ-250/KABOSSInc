@@ -2,7 +2,8 @@ export interface User {
   id: string;
   email: string;
   displayName: string;
-  photoURL?: string;
+photoURL?: string;
+  profilePictureUrl?: string;
   phone?: string;
   role: 'customer' | 'admin';
   createdAt: Date;

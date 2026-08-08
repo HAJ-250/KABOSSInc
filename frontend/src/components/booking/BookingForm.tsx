@@ -1,33 +1,46 @@
 import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { CalendarCheck } from 'lucide-react';
+import { CalendarCheck, CreditCard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { services } from '@/data/services';
 import { useCreateBooking } from '@/hooks/useBookings';
+import { useAuth } from '@/context/AuthContext';
 
 interface BookingFormProps {
   onSuccess?: () => void;
+  defaultServiceId?: string;
 }
 
-export function BookingForm({ onSuccess }: BookingFormProps) {
-  const [serviceId, setServiceId] = useState('');
+export function BookingForm({ onSuccess, defaultServiceId }: BookingFormProps) {
+  const [serviceId, setServiceId] = useState(defaultServiceId || '');
   const [details, setDetails] = useState('');
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
+  const [createdBooking, setCreatedBooking] = useState<any | null>(null);
   const createBooking = useCreateBooking();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user) {
+      const redirect = encodeURIComponent(location.pathname + location.search);
+      navigate(`/login?redirect=${redirect}`);
+      return;
+    }
     const selectedService = services.find(s => s.id === serviceId);
-    await createBooking.mutateAsync({
+    const booking = await createBooking.mutateAsync({
       serviceId,
       serviceName: selectedService?.title || '',
       details,
       date,
       time,
     });
+    setCreatedBooking(booking);
     if (onSuccess) onSuccess();
   };
 
@@ -75,10 +88,34 @@ export function BookingForm({ onSuccess }: BookingFormProps) {
             required
           />
         </div>
-        <Button type="submit" disabled={createBooking.isPending} className="w-full">
+<Button type="submit" disabled={createBooking.isPending} className="w-full">
           {createBooking.isPending ? 'Submitting...' : 'Submit Booking'}
         </Button>
       </form>
+
+      {createdBooking && (
+        <motion.div
+          initial={{ opacity: 0, y: 10, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          className="mt-5 p-5 rounded-2xl bg-gradient-to-br from-kaboss-500/10 to-kaboss-700/10 border border-kaboss-500/20"
+        >
+          <h4 className="font-semibold flex items-center gap-2 mb-1">
+            <CreditCard className="h-5 w-5 text-kaboss-500" />
+            Booking created — ready to pay?
+          </h4>
+          <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+            Your booking for "{createdBooking.serviceName}" has been submitted. You can pay for it now
+            using MTN MoMo to get started sooner.
+          </p>
+          <Button
+            onClick={() => navigate(`/dashboard/bookings`)}
+            className="w-full"
+          >
+            <CreditCard className="mr-2 h-4 w-4" />
+            Go to Bookings to Pay
+          </Button>
+        </motion.div>
+      )}
     </motion.div>
   );
 }

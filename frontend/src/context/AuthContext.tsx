@@ -21,42 +21,47 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const token = getAuthToken();
-    if (token) {
-      apiRequest<any>('/api/auth/me')
-        .then((data) => {
-          setUser({
-            id: data.id,
-            email: data.email,
-            displayName: data.displayName,
-            role: data.role,
-            phone: data.phone,
-            emailVerified: data.emailVerified,
-            isActive: data.isActive,
-            createdAt: new Date(data.createdAt),
-            updatedAt: new Date(data.updatedAt || data.createdAt),
-          });
-        })
-        .catch(() => {
-          setAuthToken(null);
-        })
-        .finally(() => setLoading(false));
-    } else {
+    if (!token) {
       setLoading(false);
+      return;
     }
+
+apiRequest<any>('/auth/me')
+      .then((data) => {
+        setUser({
+          id: data.id,
+          email: data.email,
+          displayName: data.displayName,
+          role: data.role,
+          phone: data.phone,
+          profilePictureUrl: data.profilePictureUrl,
+          emailVerified: data.emailVerified,
+          isActive: data.isActive,
+          createdAt: new Date(data.createdAt),
+          updatedAt: new Date(data.updatedAt || data.createdAt),
+        });
+      })
+      .catch(() => {
+        setAuthToken(null);
+        setUser(null);
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   const login = async (email: string, password: string) => {
-    const data = await apiRequest<{ token: string; user: any }>('/api/auth/login', {
+    const data = await apiRequest<{ token: string; user: any }>('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });
-    setAuthToken(data.token);
+
+setAuthToken(data.token);
     setUser({
       id: data.user.id,
       email: data.user.email,
       displayName: data.user.displayName,
       role: data.user.role,
       phone: data.user.phone,
+      profilePictureUrl: data.user.profilePictureUrl,
       emailVerified: false,
       isActive: true,
       createdAt: new Date(),
@@ -65,10 +70,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const register = async (email: string, password: string, displayName: string) => {
-    const data = await apiRequest<{ token: string; user: any }>('/api/auth/register', {
+    const data = await apiRequest<{ token: string; user: any }>('/auth/register', {
       method: 'POST',
       body: JSON.stringify({ email, password, displayName }),
     });
+
     setAuthToken(data.token);
     setUser({
       id: data.user.id,
@@ -88,14 +94,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const resetPassword = async (email: string) => {
-    await apiRequest('/api/auth/reset-password', {
+    await apiRequest('/auth/reset-password', {
       method: 'POST',
       body: JSON.stringify({ email }),
     });
   };
 
   const updateUserProfile = async (data: Partial<User>) => {
-    const updated = await apiRequest<any>('/api/auth/me', {
+    const updated = await apiRequest<any>('/auth/me', {
       method: 'PATCH',
       body: JSON.stringify(data),
     });
@@ -104,14 +110,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const deleteAccount = async () => {
     if (!user) throw new Error('Not authenticated');
-    await apiRequest('/api/auth/me', { method: 'DELETE' });
+    await apiRequest('/auth/me', { method: 'DELETE' });
     setAuthToken(null);
     setUser(null);
   };
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, login, register, logout, resetPassword, updateUserProfile, deleteAccount }}
+      value={{
+        user,
+        loading,
+        login,
+        register,
+        logout,
+        resetPassword,
+        updateUserProfile,
+        deleteAccount,
+      }}
     >
       {children}
     </AuthContext.Provider>
@@ -123,3 +138,4 @@ export function useAuth() {
   if (!ctx) throw new Error('useAuth must be used within AuthProvider');
   return ctx;
 }
+
