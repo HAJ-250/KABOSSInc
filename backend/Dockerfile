@@ -10,7 +10,6 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --omit=dev
 COPY --from=builder /app/dist ./dist
-COPY backend/.env.example ./.env.example
 
 ENV NODE_ENV=production
 ENV PORT=3001
