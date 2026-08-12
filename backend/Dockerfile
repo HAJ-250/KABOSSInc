@@ -1,4 +1,4 @@
-node:20-alpine AS builder
+FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
@@ -17,3 +17,4 @@ ENV PORT=3001
 
 EXPOSE 3001
 CMD ["node", "dist/index.js"]
+
