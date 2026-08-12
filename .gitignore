@@ -38,3 +38,8 @@ backend/uploads/
 
 # OS-generated files
 Desktop.ini
+
+# Database backups (may contain sensitive data)
+*.sql
+*.sql.gz
+*.dump

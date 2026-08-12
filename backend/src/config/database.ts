@@ -1,4 +1,5 @@
 import { Sequelize } from 'sequelize';
+import fs from 'node:fs';
 
 // If this module is imported before dotenv.config() runs, DATABASE_URL/DB_* might be undefined.
 // Ensure env is loaded here as well (safe no-op if already loaded).
@@ -68,11 +69,41 @@ function extractDbNameFromDatabaseUrl(databaseUrl: string | undefined): string |
 
 const DATABASE_URL_DB_NAME = extractDbNameFromDatabaseUrl(DATABASE_URL);
 
+const TIDB_CLOUD_CA_CONTENT = process.env.TIDB_CLOUD_CA_CONTENT || process.env.TIDB_CLOUD_CA;
+const TIDB_CLOUD_CA_PATH = process.env.TIDB_CLOUD_CA_PATH;
+const IS_TIDB_CLOUD =
+  (resolvedDbHost && resolvedDbHost.includes('tidbcloud.com')) ||
+  Boolean(process.env.IS_TIDB_CLOUD) ||
+  Boolean(TIDB_CLOUD_CA_CONTENT) ||
+  Boolean(TIDB_CLOUD_CA_PATH);
+
+let tidbCaPem: string | undefined;
+if (TIDB_CLOUD_CA_CONTENT) {
+  tidbCaPem = Buffer.from(TIDB_CLOUD_CA_CONTENT, 'base64').toString();
+} else if (TIDB_CLOUD_CA_PATH && fs.existsSync(TIDB_CLOUD_CA_PATH)) {
+  tidbCaPem = fs.readFileSync(TIDB_CLOUD_CA_PATH, 'utf-8');
+}
+
+const tidbSslOptions = tidbCaPem
+  ? {
+      ca: tidbCaPem,
+      minVersion: 'TLSv1.2',
+      rejectUnauthorized: true,
+    }
+  : IS_TIDB_CLOUD
+    ? {
+        minVersion: 'TLSv1.2',
+        rejectUnauthorized: false,
+      }
+    : undefined;
+
+const dialectOptions = IS_TIDB_CLOUD && tidbSslOptions ? { ssl: tidbSslOptions } : {};
+
 export const sequelize = DATABASE_URL
   ? new Sequelize(DATABASE_URL, {
       dialect: 'mysql',
       logging: process.env.NODE_ENV === 'development' ? console.log : false,
-      dialectOptions: {},
+      dialectOptions,
       pool: {
         max: 10,
         min: 0,
