@@ -129,8 +129,8 @@ export function QuotePage() {
                   +250 788 882 296
                 </a>{' '}
                 or email{' '}
-                <a href="mailto:kabbossimage@gmail.com" className="font-medium text-kaboss-600 dark:text-kaboss-400">
-                  kabbossimage@gmail.com
+                <a href="mailto:kabossimage@gmail.com" className="font-medium text-kaboss-600 dark:text-kaboss-400">
+                  kabossimage@gmail.com
                 </a>
                 .
               </p>

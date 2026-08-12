@@ -69,8 +69,7 @@ getNotifications: () => apiRequest<any[]>('/notifications'),
     }),
   downloadNotification: (id: string) => {
     const token = getAuthToken();
-    const base = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
-    const url = `${base}/notifications/${id}/download`;
+    const url = `${getApiUrl()}/notifications/${id}/download`;
     return token ? `${url}?token=${encodeURIComponent(token)}` : url;
   },
 

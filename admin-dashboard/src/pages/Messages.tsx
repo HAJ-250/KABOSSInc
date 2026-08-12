@@ -103,8 +103,9 @@ const [preview, setPreview] = useState<Attachment | null>(null);
   const [customerSearch, setCustomerSearch] = useState('');
   const [showMobileChat, setShowMobileChat] = useState(false);
 
-  const scrollRef = useRef<HTMLDivElement>(null);
+const scrollRef = useRef<HTMLDivElement>(null);
   const typingTimer = useRef<any>(null);
+  const nearBottomRef = useRef(true);
 
   const loadConversations = useCallback(async (keepActive?: number) => {
     try {
@@ -119,8 +120,10 @@ const [preview, setPreview] = useState<Attachment | null>(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeConv]);
 
-  const loadMessages = useCallback(async (conversationId: number) => {
+const loadMessages = useCallback(async (conversationId: number) => {
     setLoadingMsgs(true);
+    // Reset to bottom when opening a new conversation
+    nearBottomRef.current = true;
     try {
       const data = await adminChatApi.getMessages(String(conversationId), { limit: PAGE_SIZE });
       setMessages(data as any);
@@ -139,7 +142,7 @@ const [preview, setPreview] = useState<Attachment | null>(null);
     }
   }, []);
 
-  // Load older messages (scroll-up pagination)
+// Load older messages (scroll-up pagination)
   const loadOlderMessages = useCallback(async () => {
     if (!activeConv || !hasMore || loadingOlder || loadingMsgs) return;
     setLoadingOlder(true);
@@ -164,9 +167,15 @@ const [preview, setPreview] = useState<Attachment | null>(null);
     }
   }, [activeConv, hasMore, loadingOlder, loadingMsgs, oldestId]);
 
-  const handleScroll = () => {
+const handleScroll = () => {
     const el = scrollRef.current;
     if (!el) return;
+    // Track whether the user is near the bottom so we can auto-scroll smartly
+    // (only auto-scroll to bottom when already near the bottom; otherwise the
+    //  admin can freely scroll up to read older messages without being yanked down)
+    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+    nearBottomRef.current = distanceFromBottom < 120;
+    // Only trigger "load older" when scrolled near the top
     if (el.scrollTop < 80 && hasMore && !loadingOlder && !loadingMsgs) {
       loadOlderMessages();
     }
@@ -190,8 +199,10 @@ const [preview, setPreview] = useState<Attachment | null>(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeConv]);
 
-  useEffect(() => {
-    if (scrollRef.current) {
+useEffect(() => {
+    // Only auto-scroll to the bottom if the user is already near the bottom
+    // (so they can freely scroll up to read older messages without being yanked down)
+    if (scrollRef.current && nearBottomRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages, uploading]);
@@ -683,7 +694,7 @@ const openNewChat = async () => {
                 }}
                 placeholder="Type your message..."
                 rows={1}
-                className="flex-1 resize-none px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-premium-dark/80 focus:outline-none focus:ring-2 focus:ring-kaboss-500/50 max-h-32"
+                className="flex-1 resize-none px-4 py-3 rounded-xl border-2 border-kaboss-300 bg-kaboss-50/60 text-sm shadow-sm dark:border-kaboss-600 dark:bg-kaboss-950/40 dark:text-white dark:placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-kaboss-500/30 focus:border-kaboss-500 max-h-32"
               />
               <button
                 onClick={onSend}

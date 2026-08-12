@@ -21,6 +21,13 @@ function ensureDir(dirPath: string) {
 }
 ensureDir(UPLOAD_ROOT);
 
+function safeJoin(root: string, p: string) {
+  const full = path.join(root, p);
+  const rel = path.relative(root, full);
+  if (rel.startsWith('..') || path.isAbsolute(rel)) throw new Error('Invalid path');
+  return full;
+}
+
 const allowedMime = new Set([
   'image/jpeg',
   'image/png',
@@ -182,7 +189,7 @@ router.get('/attachments/:id/download', verifyTokenMiddleware, async (req: Authe
     if (!conv) return res.status(404).json({ error: 'Conversation not found' });
     if (!parseParticipants(conv).includes(req.userId!)) return res.status(403).json({ error: 'Forbidden' });
 
-    const absPath = path.join(UPLOAD_ROOT, att.storagePath);
+    const absPath = safeJoin(UPLOAD_ROOT, att.storagePath);
     if (!fs.existsSync(absPath)) return res.status(404).json({ error: 'File missing on server' });
 
     res.setHeader('Content-Type', att.mimeType || 'application/octet-stream');
@@ -374,7 +381,7 @@ router.post(
       if (error instanceof Error && ['Conversation not found', 'Forbidden: Not a conversation participant'].includes(error.message))
         return res.status(403).json({ error: error.message });
       console.error('Failed to upload attachments:', error);
-      res.status(400).json({ error: error?.message || 'Failed to upload files' });
+      res.status(400).json({ error: 'Failed to upload files' });
     }
   }
 );
@@ -388,7 +395,7 @@ router.delete('/:id', verifyTokenMiddleware, async (req: AuthenticatedRequest, r
 
     const atts = await Attachment.findAll({ where: { messageId: message.id } });
     for (const a of atts) {
-      const p = path.join(UPLOAD_ROOT, a.storagePath);
+      const p = safeJoin(UPLOAD_ROOT, a.storagePath);
       if (fs.existsSync(p)) fs.unlinkSync(p);
     }
     await Attachment.destroy({ where: { messageId: message.id } });

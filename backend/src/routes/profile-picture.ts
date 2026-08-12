@@ -84,7 +84,7 @@ router.post('/', upload.single('image'), async (req: AuthenticatedRequest, res: 
     res.json({ profilePictureUrl: url, user: updated });
   } catch (error: any) {
     console.error('Profile picture upload failed:', error);
-    res.status(400).json({ error: error?.message || 'Failed to upload profile picture' });
+    res.status(400).json({ error: 'Failed to upload profile picture' });
   }
 });
 

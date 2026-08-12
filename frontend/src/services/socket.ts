@@ -1,5 +1,6 @@
 import { io, Socket } from 'socket.io-client';
 import { getAuthToken } from '@/lib/firebase';
+import toast from 'react-hot-toast';
 
 const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:3001';
 
@@ -10,6 +11,7 @@ export function getSocket(): Socket | null {
 }
 
 let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
+let socketErrorNotified = false;
 
 export function connectSocket(): Socket | null {
   const token = getAuthToken();
@@ -26,6 +28,7 @@ export function connectSocket(): Socket | null {
   });
 
   socket.on('connect', () => {
+    socketErrorNotified = false;
     if (reconnectTimer) {
       clearTimeout(reconnectTimer);
       reconnectTimer = null;
@@ -34,6 +37,10 @@ export function connectSocket(): Socket | null {
 
   socket.on('connect_error', (err) => {
     console.error('Socket connect error:', err.message);
+    if (!socketErrorNotified) {
+      socketErrorNotified = true;
+      toast.error('Chat server unreachable. Retrying...');
+    }
   });
 
   return socket;

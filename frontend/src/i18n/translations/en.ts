@@ -378,7 +378,7 @@ t1: 'KABOSS Inc delivered exceptional printing services for my business. The qua
       q3: 'What are your business hours?',
       a3: 'Monday to Saturday: 8:00 AM - 6:00 PM, Sunday: 9:00 AM - 2:00 PM.',
       q4: 'How can I contact KABOSS Inc?',
-      a4: 'You can call us at +250 788 882 296, email kabbossimage@gmail.com, chat with us on WhatsApp, or visit our Contact page to send us a message.',
+      a4: 'You can call us at +250 788 882 296, email kabossimage@gmail.com, chat with us on WhatsApp, or visit our Contact page to send us a message.',
       q5: 'Do you offer delivery services?',
       a5: 'Yes, we offer delivery for certain services within Nyamasheke District. Contact us for more details.',
       q6: 'How long does it take to print invitations?',
@@ -427,7 +427,7 @@ t1: 'KABOSS Inc delivered exceptional printing services for my business. The qua
     s5Title: 'Your Rights',
     s5: 'You have the right to access, correct, or delete your personal information. Contact us to exercise these rights.',
     s6Title: 'Contact Us',
-    s6: 'If you have questions about this privacy policy, please contact us at kabbossimage@gmail.com or call +250 788 882 296.',
+    s6: 'If you have questions about this privacy policy, please contact us at kabossimage@gmail.com or call +250 788 882 296.',
   },
   terms: {
     title: 'Terms &',
@@ -446,7 +446,7 @@ t1: 'KABOSS Inc delivered exceptional printing services for my business. The qua
     s6Title: 'Limitation of Liability',
     s6: 'KABOSS Inc shall not be liable for any indirect, incidental, or consequential damages arising from the use of our services.',
     s7Title: 'Contact',
-    s7: 'For questions about these terms, contact us at kabbossimage@gmail.com or call +250 788 882 296.',
+    s7: 'For questions about these terms, contact us at kabossimage@gmail.com or call +250 788 882 296.',
   },
   notfound: {
     title: 'Page Not Found',

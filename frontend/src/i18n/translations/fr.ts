@@ -378,7 +378,7 @@ t1: 'KABOSS Inc a fourni des services d\'impression exceptionnels pour mon entre
       q3: 'Quelles sont vos heures d\'ouverture ?',
       a3: 'Du lundi au samedi : 8h00 - 18h00, dimanche : 9h00 - 14h00.',
       q4: 'Comment puis-je contacter KABOSS Inc ?',
-      a4: 'Appelez-nous au +250 788 882 296, envoyez un e-mail à kabbossimage@gmail.com, discutez sur WhatsApp ou visitez notre page Contact.',
+      a4: 'Appelez-nous au +250 788 882 296, envoyez un e-mail à kabossimage@gmail.com, discutez sur WhatsApp ou visitez notre page Contact.',
       q5: 'Offrez-vous des services de livraison ?',
       a5: 'Oui, nous offrons la livraison pour certains services dans le district de Nyamasheke. Contactez-nous.',
       q6: 'Combien de temps faut-il pour imprimer des invitations ?',
@@ -427,7 +427,7 @@ t1: 'KABOSS Inc a fourni des services d\'impression exceptionnels pour mon entre
     s5Title: 'Vos droits',
     s5: 'Vous avez le droit d\'accéder, de corriger ou de supprimer vos informations personnelles.',
     s6Title: 'Contactez-nous',
-    s6: 'Pour toute question sur cette politique, contactez-nous à kabbossimage@gmail.com ou au +250 788 882 296.',
+    s6: 'Pour toute question sur cette politique, contactez-nous à kabossimage@gmail.com ou au +250 788 882 296.',
   },
   terms: {
     title: 'Conditions',
@@ -446,7 +446,7 @@ t1: 'KABOSS Inc a fourni des services d\'impression exceptionnels pour mon entre
     s6Title: 'Limitation de responsabilité',
     s6: 'KABOSS Inc ne sera pas responsable des dommages indirects ou consécutifs.',
     s7Title: 'Contact',
-    s7: 'Pour toute question, contactez-nous à kabbossimage@gmail.com ou au +250 788 882 296.',
+    s7: 'Pour toute question, contactez-nous à kabossimage@gmail.com ou au +250 788 882 296.',
   },
   notfound: {
     title: 'Page introuvable',

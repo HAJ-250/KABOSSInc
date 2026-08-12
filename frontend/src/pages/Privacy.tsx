@@ -34,7 +34,7 @@ export function Privacy() {
             <h2>Your Rights</h2>
             <p>You have the right to access, correct, or delete your personal information. Contact us to exercise these rights.</p>
             <h2>Contact Us</h2>
-            <p>If you have questions about this privacy policy, please contact us at kabbossimage@gmail.com or call +250 788 882 296.</p>
+            <p>If you have questions about this privacy policy, please contact us at kabossimage@gmail.com or call +250 788 882 296.</p>
           </div>
         </div>
       </section>

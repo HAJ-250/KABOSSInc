@@ -14,7 +14,9 @@ export function connectSocket(): Socket | null {
   if (!token) return null;
   if (socket?.connected) return socket;
 
-  socket = io('http://localhost:3001', {
+  const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:3001';
+
+  socket = io(SOCKET_URL, {
     auth: { token },
     transports: ['websocket', 'polling'],
     reconnection: true,

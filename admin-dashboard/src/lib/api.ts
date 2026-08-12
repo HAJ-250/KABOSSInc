@@ -1,4 +1,5 @@
-const API_URL = '/api';
+const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:3001').replace(/\/+$/, '').replace(/\/api$/, '');
+const API_URL = `${API_BASE}/api`;
 
 export function getToken(): string | null {
   return localStorage.getItem('admin_token');

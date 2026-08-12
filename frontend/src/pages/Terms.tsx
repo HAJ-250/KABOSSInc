@@ -36,7 +36,7 @@ export function Terms() {
             <h2>Limitation of Liability</h2>
             <p>KABOSS Inc shall not be liable for any indirect, incidental, or consequential damages arising from the use of our services.</p>
             <h2>Contact</h2>
-            <p>For questions about these terms, contact us at kabbossimage@gmail.com or call +250 788 882 296.</p>
+            <p>For questions about these terms, contact us at kabossimage@gmail.com or call +250 788 882 296.</p>
           </div>
         </div>
       </section>

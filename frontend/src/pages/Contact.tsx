@@ -185,10 +185,10 @@ export function Contact() {
                   <div className="flex items-center gap-3">
                     <Mail className="h-5 w-5 text-kaboss-500 shrink-0" />
                     <a
-                      href="mailto:kabbossimage@gmail.com"
+                      href="mailto:kabossimage@gmail.com"
                       className="text-sm hover:text-kaboss-600 dark:hover:text-kaboss-400 transition-colors break-all"
                     >
-                      kabbossimage@gmail.com
+                      kabossimage@gmail.com
                     </a>
                   </div>
                   <div className="flex items-start gap-3">

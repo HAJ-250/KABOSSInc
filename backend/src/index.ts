@@ -33,7 +33,6 @@ const PORT = process.env.PORT || 3001;
 const FRONTEND_URLS = [
   process.env.FRONTEND_URL || 'http://localhost:5173',
   process.env.ADMIN_URL || 'http://localhost:5174',
-  process.env.ADMIN_URL || 'http://localhost:5173',
 ];
 
 process.on('unhandledRejection', (reason) => {
@@ -278,8 +277,10 @@ process.on('SIGTERM', async () => {
 async function start() {
   await initDatabase();
 
-  const { default: seed } = await import('./seed.js');
-  await seed();
+  if (process.env.NODE_ENV !== 'production') {
+    const { default: seed } = await import('./seed.js');
+    await seed();
+  }
 
   httpServer = http.createServer(app);
 

@@ -378,7 +378,7 @@ t1: 'KABOSS Inc yatanze serivisi zo gucapa z\'ubwiza ku bucuruzi bwanjye. Ubwiza
       q3: 'Amasaha y\'akazi ayahe?',
       a3: 'Ku wa Mbere kugeza ku wa Gatandatu: 8:00 - 18:00, ku cyumweru: 9:00 - 14:00.',
       q4: 'Nshobora kuhuza na KABOSS Inc gute?',
-      a4: 'Urashobora kutwihamagara kuri +250 788 882 296, kohereza imeri kuri kabbossimage@gmail.com, kuvugana kuri WhatsApp, cyangwa kureba urubuga rwo Kuhuza.',
+      a4: 'Urashobora kutwihamagara kuri +250 788 882 296, kohereza imeri kuri kabossimage@gmail.com, kuvugana kuri WhatsApp, cyangwa kureba urubuga rwo Kuhuza.',
       q5: 'Muhana serivisi zo gutwara?',
       a5: 'Yego, duhana ubufasha bwo gutwara mu karere ka Nyamasheke hamwe na serivisi zimwe na zimwe. Twandikire kugirango umenye byinshi.',
       q6: 'Bigora ikihe gihe gucapa utumero?',
@@ -427,7 +427,7 @@ t1: 'KABOSS Inc yatanze serivisi zo gucapa z\'ubwiza ku bucuruzi bwanjye. Ubwiza
     s5Title: 'Uburenganzira Bwawe',
     s5: 'Ufite uburenganzira bwo kureba, gukosora, cyangwa gusiba amakuru yawe. Twandikire kugirango ukoreshe uburenganzira bwawe.',
     s6Title: 'Kuhuza Natwe',
-    s6: 'Niba ufite ibibazo kuri iyi policy, twandikire kuri kabbossimage@gmail.com cyangwa uhamagare +250 788 882 296.',
+    s6: 'Niba ufite ibibazo kuri iyi policy, twandikire kuri kabossimage@gmail.com cyangwa uhamagare +250 788 882 296.',
   },
   terms: {
     title: 'Amasezerano',
@@ -446,7 +446,7 @@ t1: 'KABOSS Inc yatanze serivisi zo gucapa z\'ubwiza ku bucuruzi bwanjye. Ubwiza
     s6Title: 'Uruzitiro rw\'Ingaruka',
     s6: 'KABOSS Inc ntabwo izabazwa ku ngaruka z\'ubutindi, za bishoboka, cyangwa za bwitwara.',
     s7Title: 'Kuhuza',
-    s7: 'Kubibazo, twandikire kuri kabbossimage@gmail.com cyangwa uhamagare +250 788 882 296.',
+    s7: 'Kubibazo, twandikire kuri kabossimage@gmail.com cyangwa uhamagare +250 788 882 296.',
   },
   notfound: {
     title: 'Page Ntibonetse',

@@ -168,7 +168,7 @@ const catMap: Record<string, string> = {};
     res.status(201).json({ galleryImages: next.galleryImages });
   } catch (error: any) {
     console.error('Failed to upload gallery:', error);
-    res.status(400).json({ error: error?.message || 'Failed to upload gallery' });
+    res.status(400).json({ error: 'Failed to upload gallery' });
   }
 });
 
@@ -188,7 +188,7 @@ router.post('/upload/profile', profileUpload.array('images', 10), async (req: Au
     res.status(201).json({ profilePictures: next.profilePictures });
   } catch (error: any) {
     console.error('Failed to upload profile:', error);
-    res.status(400).json({ error: error?.message || 'Failed to upload profile images' });
+    res.status(400).json({ error: 'Failed to upload profile images' });
   }
 });
 

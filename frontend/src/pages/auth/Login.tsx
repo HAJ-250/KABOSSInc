@@ -23,7 +23,7 @@ export function Login() {
     try {
       await login(email, password);
       toast.success('Welcome back!');
-      if (redirect) {
+      if (redirect && redirect.startsWith('/') && !redirect.startsWith('//')) {
         navigate(decodeURIComponent(redirect));
       } else {
         navigate('/dashboard');

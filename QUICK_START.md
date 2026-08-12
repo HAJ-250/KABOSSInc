@@ -42,7 +42,7 @@ DB_PORT=3306
 DB_USER=root
 DB_PASSWORD=          # Leave empty if MySQL has no password
 DB_NAME=kaboss
-JWT_SECRET=kaboss-dev-secret-change-in-production
+JWT_SECRET=<your-strong-jwt-secret>
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=your-email@gmail.com
@@ -69,7 +69,7 @@ This starts:
 
 #### Admin Login
 - **Email/Username:** `admin@kabossinc.com` / `kabossInc`
-- **Password:** `kaboss123!`
+- **Password:** `<seed-password>`
 - **Access:** http://localhost:5173/login
 
 #### Admin Dashboard
@@ -149,7 +149,7 @@ The app now displays an animated loading screen with:
 ```
 Email: admin@kabossinc.com
 Username: kabossInc
-Password: kaboss123!
+Password: <seed-password>
 ```
 
 ⚠️ **Important:** Change this password immediately in production!

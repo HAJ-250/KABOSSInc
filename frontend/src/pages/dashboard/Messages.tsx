@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { api, attachmentUrl } from '@/services/api';
+import { getApiUrl, getAuthToken } from '@/lib/firebase';
 import {
   connectSocket, disconnectSocket, joinConversation, leaveConversation,
   emitTypingStart, emitTypingStop, emitMessageRead,
@@ -404,9 +405,9 @@ export function DashboardMessages() {
 
   const downloadAttachment = async (att: Attachment) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = getAuthToken();
       const res = await fetch(
-        `http://localhost:3001/api/messages/attachments/${att.id}/download`,
+        `${getApiUrl()}/messages/attachments/${att.id}/download`,
         { headers: token ? { Authorization: `Bearer ${token}` } : {} }
       );
       if (!res.ok) {

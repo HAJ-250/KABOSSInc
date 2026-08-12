@@ -1,0 +1,90 @@
+version: '3.9'
+
+services:
+  db:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: kaboss
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "${PORT:-3001}:3001"
+    environment:
+      - PORT=3001
+      - NODE_ENV=production
+      - FRONTEND_URL=${FRONTEND_URL}
+      - ADMIN_URL=${ADMIN_URL}
+      - DATABASE_URL=${DATABASE_URL}
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=kaboss
+      - JWT_SECRET=${JWT_SECRET}
+      - MTN_ENVIRONMENT=live
+      - MTN_TARGET_ENV=live
+      - MTN_CURRENCY=RWF
+      - MTN_CONSUMER_KEY=${MTN_CONSUMER_KEY}
+      - MTN_CONSUMER_SECRET=${MTN_CONSUMER_SECRET}
+      - MTN_API_USER=${MTN_API_USER}
+      - MTN_API_KEY=${MTN_API_KEY}
+      - MTN_SUBSCRIPTION_KEY=${MTN_SUBSCRIPTION_KEY}
+      - MTN_MOMO_PAYEE_NUMBER=${MTN_MOMO_PAYEE_NUMBER}
+      - MTN_PROVIDER_CALLBACK_HOST=${MTN_PROVIDER_CALLBACK_HOST}
+      - MTN_CALLBACK_URL=${MTN_CALLBACK_URL}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      - SMTP_FROM=${SMTP_FROM}
+    volumes:
+      - uploads_data:/app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${FRONTEND_VITE_API_URL}
+        VITE_SOCKET_URL: ${FRONTEND_VITE_SOCKET_URL}
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  admin:
+    build:
+      context: ./admin-dashboard
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${ADMIN_VITE_API_URL}
+        VITE_SOCKET_URL: ${ADMIN_VITE_SOCKET_URL}
+    ports:
+      - "81:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+  uploads_data:

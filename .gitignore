@@ -1,1 +1,40 @@
-﻿node_modules/
+﻿# Dependencies
+node_modules/
+
+# Environment variables — never commit real env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+**/.env
+backend/.env
+frontend/.env
+admin-dashboard/.env
+# Keep example files tracked (they contain no secrets)
+
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+.tsbuild-check/
+
+# Logs
+*.log
+logs/
+Logs/
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Uploaded user content (local development only; production uses cloud storage)
+backend/uploads/
+
+# OS-generated files
+Desktop.ini

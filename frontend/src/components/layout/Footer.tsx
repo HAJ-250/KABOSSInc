@@ -51,7 +51,7 @@ export function Footer() {
                 <span className="text-xs font-medium uppercase">w</span>
               </a>
               <a
-                href="mailto:kabbossimage@gmail.com"
+                href="mailto:kabossimage@gmail.com"
                 aria-label="Email"
                 className="h-10 w-10 rounded-xl bg-white/5 flex items-center justify-center text-gray-400 hover:bg-kaboss-500 hover:text-white transition-all duration-300"
               >
@@ -122,7 +122,7 @@ export function Footer() {
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="h-5 w-5 text-kaboss-400 shrink-0" />
-                <a href="mailto:kabbossimage@gmail.com" className="text-gray-400 text-sm hover:text-white transition-colors">kabbossimage@gmail.com</a>
+                <a href="mailto:kabossimage@gmail.com" className="text-gray-400 text-sm hover:text-white transition-colors">kabossimage@gmail.com</a>
               </li>
               <li className="flex items-start gap-3">
                 <Clock className="h-5 w-5 text-kaboss-400 mt-0.5 shrink-0" />

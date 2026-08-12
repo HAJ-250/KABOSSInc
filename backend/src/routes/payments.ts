@@ -14,6 +14,7 @@ import {
   getTransactionStatus,
   mapStatusToPaymentStatus,
   isSandbox,
+  getSubscriptionKey,
 } from '../lib/momoService.js';
 import { getIO } from '../socket/index.js';
 
@@ -200,11 +201,20 @@ router.post('/confirm', async (req: AuthenticatedRequest, res: Response) => {
 
 /**
  * POST /api/payments/callback
- * MTN MoMo callback endpoint (public, but validates the reference).
- * Updates the payment status based on MTN's payload.
+ * MTN MoMo callback endpoint.
+ * Verifies the MTN subscription key header and validates the reference
+ * against pending payments before updating status.
  */
 router.post('/callback', async (req, res) => {
   try {
+    const subscriptionKey = req.headers['ocp-apim-subscription-key'];
+    const expectedKey = getSubscriptionKey();
+
+    if (!expectedKey || subscriptionKey !== expectedKey) {
+      console.warn('MTN callback rejected: invalid or missing subscription key');
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
     const body = req.body || {};
     const momoReferenceId =
       body?.referenceId || body?.externalId || body?.transaction?.referenceId || '';
@@ -217,7 +227,6 @@ router.post('/callback', async (req, res) => {
       where: { momoReferenceId, paymentStatus: 'PENDING' },
     });
     if (!payment) {
-      // Reference not found or already processed - nothing to do
       return res.status(200).json({ message: 'Ignored' });
     }
 
@@ -259,7 +268,7 @@ router.post('/callback', async (req, res) => {
     res.status(200).json({ message: 'Callback processed' });
   } catch (error) {
     console.error('Payment callback error:', error);
-    res.status(200).json({ message: 'Callback acknowledged' });
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 

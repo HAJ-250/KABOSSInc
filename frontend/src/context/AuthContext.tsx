@@ -26,7 +26,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-apiRequest<any>('/auth/me')
+    apiRequest<any>('/auth/me')
       .then((data) => {
         setUser({
           id: data.id,

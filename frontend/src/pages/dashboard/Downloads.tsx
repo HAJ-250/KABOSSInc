@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import toast from 'react-hot-toast';
 import { api } from '@/services/api';
+import { getApiUrl, getAuthToken } from '@/lib/firebase';
 
 type DownloadRec = {
   id: string;
@@ -44,16 +45,10 @@ export function DashboardDownloads() {
     load();
   }, []);
 
-  const download = async (id: string) => {
-    try {
-      const url = await api.downloadFile(id);
-      // api.downloadFile returns a fetch response? In this app apiRequest likely returns JSON.
-      // So instead of relying on it, just open the endpoint.
-      window.open(`${import.meta.env.VITE_API_BASE_URL || ''}/api/downloads/${id}/file`, '_blank');
-    } catch {
-      // fallback to opening endpoint
-      window.open(`/api/downloads/${id}/file`, '_blank');
-    }
+  const download = (id: string) => {
+    const token = getAuthToken();
+    const url = `${getApiUrl()}/downloads/${id}/file${token ? `?token=${encodeURIComponent(token)}` : ''}`;
+    window.open(url, '_blank');
   };
 
   const title = useMemo(() => 'Downloads', []);

@@ -33,7 +33,7 @@ export function Register() {
     try {
       await register(email, password, name);
       toast.success('Account created successfully!');
-      if (redirect) {
+      if (redirect && redirect.startsWith('/') && !redirect.startsWith('//')) {
         navigate(decodeURIComponent(redirect));
       } else {
         navigate('/dashboard');

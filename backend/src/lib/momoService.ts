@@ -49,7 +49,7 @@ function loadConfig(): MomoConfig {
     environment,
     targetEnv: process.env.MTN_TARGET_ENV || (sandbox ? 'sandbox' : 'mtnrwanda'),
     currency: process.env.MTN_CURRENCY || 'RWF',
-    payeeNumber: process.env.MTN_MOMO_PAYEE_NUMBER || '250788882296',
+    payeeNumber: process.env.MTN_MOMO_PAYEE_NUMBER || '',
     sandbox,
   };
 }
@@ -74,6 +74,10 @@ function getBaseUrl(): string {
  */
 export function isSandbox(): boolean {
   return config.sandbox;
+}
+
+export function getSubscriptionKey(): string {
+  return config.subscriptionKey;
 }
 
 /**

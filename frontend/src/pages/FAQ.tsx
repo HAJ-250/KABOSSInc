@@ -8,7 +8,7 @@ const faqs = [
   { q: 'What services does KABOSS Inc offer?', a: 'We offer printing services, graphic design, photography, sound system rental, digital services, and Irembo assistance. Visit our Services page for full details.', category: 'general' },
   { q: 'Where is KABOSS Inc located?', a: 'We are located in Nyamasheke District, Ruharambuga Sector, Ntendezi Cell, Kakiru Village, Rwanda.', category: 'general' },
   { q: 'What are your business hours?', a: 'Monday to Saturday: 8:00 AM - 6:00 PM, Sunday: 9:00 AM - 2:00 PM.', category: 'general' },
-  { q: 'How can I contact KABOSS Inc?', a: 'You can call us at +250 788 882 296, email kabbossimage@gmail.com, chat with us on WhatsApp, or visit our Contact page to send us a message.', category: 'contact' },
+  { q: 'How can I contact KABOSS Inc?', a: 'You can call us at +250 788 882 296, email kabossimage@gmail.com, chat with us on WhatsApp, or visit our Contact page to send us a message.', category: 'contact' },
   { q: 'Do you offer delivery services?', a: 'Yes, we offer delivery for certain services within Nyamasheke District. Contact us for more details.', category: 'services' },
   { q: 'How long does it take to print invitations?', a: 'Typical turnaround time is 2-3 business days, depending on the quantity and complexity of the design.', category: 'printing' },
   { q: 'Can I request a custom design?', a: 'Absolutely! Our graphic design team can create custom designs tailored to your preferences. Visit our Services page or contact us.', category: 'design' },

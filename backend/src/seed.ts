@@ -37,7 +37,7 @@ async function seed() {
       role: desiredAdmin.role,
       emailVerified: desiredAdmin.emailVerified,
     });
-    console.log('  Created admin: kabossInc (password: kaboss123!)');
+    console.log('  Created admin: kabossInc');
   } else {
     const adminToUpdate = existingAdmin ?? existingAdminByEmail;
     adminToUpdate!.password = desiredAdmin.passwordHash;
@@ -45,7 +45,7 @@ async function seed() {
     adminToUpdate!.role = desiredAdmin.role;
     adminToUpdate!.emailVerified = desiredAdmin.emailVerified;
     await adminToUpdate!.save();
-    console.log('  Updated admin password to: kaboss123!');
+    console.log('  Updated admin password');
   }
 
 

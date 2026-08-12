@@ -12,6 +12,7 @@ import { useRef, useState } from 'react';
 import { clsx } from 'clsx';
 import { setToken, getStoredUser, setStoredUser, apiRequest, resolveImageUrl } from '../lib/api';
 import toast from 'react-hot-toast';
+import { LanguageSelector } from './LanguageSelector';
 
 const navItems = [
   { icon: LayoutDashboard, label: 'Dashboard', href: '/' },
@@ -79,8 +80,8 @@ export function AppLayout() {
     navigate('/login');
   };
 
-  return (
-    <div className="min-h-screen bg-gray-50 dark:bg-premium-dark">
+return (
+    <div className="h-screen flex flex-col overflow-hidden bg-gray-50 dark:bg-premium-dark">
       <AnimatePresence>
         {sidebarOpen && (
           <motion.div
@@ -137,7 +138,7 @@ export function AppLayout() {
         </nav>
 
         <div className="absolute bottom-0 left-0 right-0 p-3 border-t border-white/10">
-          <a href="http://localhost:5173" target="_blank" rel="noreferrer"
+          <a href={import.meta.env.VITE_FRONTEND_URL || 'http://localhost:5173'} target="_blank" rel="noreferrer"
             className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
             <Home className="h-4 w-4" />
             Back to Website
@@ -145,14 +146,15 @@ export function AppLayout() {
         </div>
       </aside>
 
-      <div className="lg:pl-64">
-        <header className="sticky top-0 z-30 bg-white/80 dark:bg-premium-dark/80 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800">
+<div className="lg:pl-64 flex flex-col flex-1 min-h-0">
+        <header className="shrink-0 z-30 bg-white/80 dark:bg-premium-dark/80 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between h-16 px-4 lg:px-8">
             <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800">
               <Menu className="h-5 w-5" />
             </button>
 
 <div className="flex items-center gap-4 ml-auto">
+              <LanguageSelector compact />
               <button
                 onClick={handleToggleDarkMode}
                 className="h-10 w-10 rounded-xl flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
@@ -221,12 +223,12 @@ export function AppLayout() {
           </div>
         </header>
 
-<main className="p-4 lg:p-8">
+<main className="p-4 lg:p-8 flex-1 overflow-y-auto min-h-0">
           <Outlet />
         </main>
 
         {/* Consistent premium footer */}
-        <footer className="relative bg-premium-dark text-white overflow-hidden">
+        <footer className="shrink-0 relative bg-premium-dark text-white overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-kaboss-500/10 via-transparent to-transparent" />
           <div className="relative mx-auto max-w-7xl px-6 py-12">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">

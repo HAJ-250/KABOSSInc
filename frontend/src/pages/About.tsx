@@ -166,7 +166,7 @@ return (
                 </div>
                 <div className="flex items-center gap-3">
                   <Mail className="h-5 w-5 text-kaboss-500 shrink-0" />
-                  <a href="mailto:kabbossimage@gmail.com" className="hover:text-kaboss-600 dark:hover:text-kaboss-400 transition-colors">kabbossimage@gmail.com</a>
+                  <a href="mailto:kabossimage@gmail.com" className="hover:text-kaboss-600 dark:hover:text-kaboss-400 transition-colors">kabossimage@gmail.com</a>
                 </div>
                 <Link to="/contact">
                   <Button className="mt-4">{t('about.getDirections')}</Button>

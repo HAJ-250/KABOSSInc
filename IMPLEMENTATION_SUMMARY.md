@@ -293,7 +293,7 @@ KABOSS Inc/
 ```
 Email: admin@kabossinc.com
 Username: kabossInc
-Password: kaboss123!
+Password: <seed-password>
 ```
 
 **Location:** `backend/src/seed.ts` (lines 17-27)

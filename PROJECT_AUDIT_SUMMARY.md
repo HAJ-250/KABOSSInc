@@ -127,7 +127,7 @@ KABOSS Inc/
 
 **Email:** `admin@kabossinc.com`
 **Username:** `kabossInc`
-**Password:** `kaboss123!` (default seed - MUST be changed in production)
+**Password:** `<seed-password>` (default seed - MUST be changed in production)
 
 **Location:** `backend/src/seed.ts` (lines 17-27)
 
@@ -171,7 +171,7 @@ DB_PORT=3306
 DB_USER=root
 DB_PASSWORD=
 DB_NAME=kaboss
-JWT_SECRET=kaboss-dev-secret-change-in-production
+JWT_SECRET=<your-strong-jwt-secret>
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=your-email@gmail.com
