@@ -1,5 +1,5 @@
-export const up = async (sequelize: any) => {
-  await sequelize.query(`
+export const up = async ({ context }: { context: any }) => {
+  await context.query(`
     CREATE TABLE IF NOT EXISTS \`Users\` (
       \`id\` INT UNSIGNED NOT NULL AUTO_INCREMENT,
       \`email\` VARCHAR(255) NULL DEFAULT NULL,
@@ -19,7 +19,7 @@ export const up = async (sequelize: any) => {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   `);
 
-  await sequelize.query(`
+  await context.query(`
     CREATE TABLE IF NOT EXISTS \`Services\` (
       \`id\` INT UNSIGNED NOT NULL AUTO_INCREMENT,
       \`title\` VARCHAR(255) NOT NULL,
@@ -32,7 +32,7 @@ export const up = async (sequelize: any) => {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   `);
 
-  await sequelize.query(`
+  await context.query(`
     CREATE TABLE IF NOT EXISTS \`Bookings\` (
       \`id\` INT UNSIGNED NOT NULL AUTO_INCREMENT,
       \`userId\` INT UNSIGNED NOT NULL,
@@ -54,7 +54,7 @@ export const up = async (sequelize: any) => {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   `);
 
-  await sequelize.query(`
+  await context.query(`
     CREATE TABLE IF NOT EXISTS \`Quotes\` (
       \`id\` INT UNSIGNED NOT NULL AUTO_INCREMENT,
       \`userId\` INT UNSIGNED NOT NULL,
@@ -71,7 +71,7 @@ export const up = async (sequelize: any) => {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   `);
 
-  await sequelize.query(`
+  await context.query(`
     CREATE TABLE IF NOT EXISTS \`Contacts\` (
       \`id\` INT UNSIGNED NOT NULL AUTO_INCREMENT,
       \`name\` VARCHAR(255) NOT NULL,
@@ -86,7 +86,7 @@ export const up = async (sequelize: any) => {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   `);
 
-  await sequelize.query(`
+  await context.query(`
     CREATE TABLE IF NOT EXISTS \`Conversations\` (
       \`id\` INT UNSIGNED NOT NULL AUTO_INCREMENT,
       \`subject\` VARCHAR(255) NULL DEFAULT NULL,
@@ -100,7 +100,7 @@ export const up = async (sequelize: any) => {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   `);
 
-  await sequelize.query(`
+  await context.query(`
     CREATE TABLE IF NOT EXISTS \`Messages\` (
       \`id\` INT UNSIGNED NOT NULL AUTO_INCREMENT,
       \`conversationId\` INT UNSIGNED NOT NULL,
@@ -118,7 +118,7 @@ export const up = async (sequelize: any) => {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   `);
 
-  await sequelize.query(`
+  await context.query(`
     CREATE TABLE IF NOT EXISTS \`Attachments\` (
       \`id\` INT UNSIGNED NOT NULL AUTO_INCREMENT,
       \`messageId\` INT UNSIGNED NOT NULL,
@@ -138,7 +138,7 @@ export const up = async (sequelize: any) => {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   `);
 
-  await sequelize.query(`
+  await context.query(`
     CREATE TABLE IF NOT EXISTS \`Notifications\` (
       \`id\` INT UNSIGNED NOT NULL AUTO_INCREMENT,
       \`userId\` INT UNSIGNED NOT NULL,
@@ -153,7 +153,7 @@ export const up = async (sequelize: any) => {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   `);
 
-  await sequelize.query(`
+  await context.query(`
     CREATE TABLE IF NOT EXISTS \`Payments\` (
       \`id\` INT UNSIGNED NOT NULL AUTO_INCREMENT,
       \`bookingId\` INT UNSIGNED NOT NULL,
@@ -177,7 +177,7 @@ export const up = async (sequelize: any) => {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   `);
 
-  await sequelize.query(`
+  await context.query(`
     CREATE TABLE IF NOT EXISTS \`BookingFiles\` (
       \`id\` INT UNSIGNED NOT NULL AUTO_INCREMENT,
       \`bookingId\` INT UNSIGNED NOT NULL,
@@ -194,7 +194,7 @@ export const up = async (sequelize: any) => {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   `);
 
-  await sequelize.query(`
+  await context.query(`
     CREATE TABLE IF NOT EXISTS \`Announcements\` (
       \`id\` INT UNSIGNED NOT NULL AUTO_INCREMENT,
       \`title\` VARCHAR(255) NOT NULL,
@@ -207,7 +207,7 @@ export const up = async (sequelize: any) => {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   `);
 
-  await sequelize.query(`
+  await context.query(`
     CREATE TABLE IF NOT EXISTS \`Partners\` (
       \`id\` INT UNSIGNED NOT NULL AUTO_INCREMENT,
       \`name\` VARCHAR(255) NOT NULL,
@@ -221,7 +221,7 @@ export const up = async (sequelize: any) => {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   `);
 
-  await sequelize.query(`
+  await context.query(`
     CREATE TABLE IF NOT EXISTS \`Testimonials\` (
       \`id\` INT UNSIGNED NOT NULL AUTO_INCREMENT,
       \`name\` VARCHAR(255) NOT NULL,
@@ -235,7 +235,7 @@ export const up = async (sequelize: any) => {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   `);
 
-  await sequelize.query(`
+  await context.query(`
     CREATE TABLE IF NOT EXISTS \`FAQs\` (
       \`id\` INT UNSIGNED NOT NULL AUTO_INCREMENT,
       \`question\` TEXT NOT NULL,
@@ -249,7 +249,7 @@ export const up = async (sequelize: any) => {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   `);
 
-  await sequelize.query(`
+  await context.query(`
     CREATE TABLE IF NOT EXISTS \`Settings\` (
       \`id\` INT UNSIGNED NOT NULL AUTO_INCREMENT,
       \`key\` VARCHAR(255) NOT NULL,
@@ -262,7 +262,7 @@ export const up = async (sequelize: any) => {
   `);
 };
 
-export const down = async (sequelize: any) => {
+export const down = async ({ context }: { context: any }) => {
   throw new Error(
     'Baseline migration 0001-baseline.ts cannot be rolled back. ' +
     'It represents the existing production schema. ' +

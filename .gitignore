@@ -43,3 +43,4 @@ Desktop.ini
 *.sql
 *.sql.gz
 *.dump
+*.pem

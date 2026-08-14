@@ -14,32 +14,36 @@ const DB_PORT = parseInt(process.env.DB_PORT || '3306', 10);
 
 const DATABASE_URL = process.env.DATABASE_URL;
 
-
 function getDbHostFromUrl(url: string | undefined): string | null {
   if (!url) return null;
   try {
-    // postgresql://user:pass@host:port/db?...
-    const withoutProto = url.replace(/^\w+:\/\//, '');
-    const at = withoutProto.indexOf('@');
-    const hostPortAndPath = at >= 0 ? withoutProto.slice(at + 1) : withoutProto;
-    const hostPort = hostPortAndPath.split('/')[0];
-    return hostPort.split(':')[0] || hostPort;
+    const parsed = new URL(url);
+    return parsed.hostname || null;
+  } catch {
+    return null;
+  }
+}
+
+function extractDbNameFromDatabaseUrl(databaseUrl: string | undefined): string | null {
+  if (!databaseUrl) return null;
+  try {
+    const parsed = new URL(databaseUrl);
+    const name = parsed.pathname.replace(/^\//, '');
+    return name || null;
   } catch {
     return null;
   }
 }
 
 const resolvedDbHost = getDbHostFromUrl(DATABASE_URL);
+const DATABASE_URL_DB_NAME = extractDbNameFromDatabaseUrl(DATABASE_URL);
 
 console.log('[db] initDatabase:');
 console.log('[db] DATABASE_URL present:', Boolean(DATABASE_URL));
 
 if (DATABASE_URL) {
-  // Extract db name from postgresql/mysql URL: scheme://user:pass@host:port/dbname
-  const dbNameMatch = DATABASE_URL.match(/\/[a-zA-Z0-9_\-]+(?=\?|$)/);
-  const dbNameFromUrl = dbNameMatch ? dbNameMatch[0].replace(/^\//, '') : null;
   console.log('[db] DATABASE_URL host:', resolvedDbHost);
-  console.log('[db] DATABASE_URL dbName:', dbNameFromUrl);
+  console.log('[db] DATABASE_URL database:', DATABASE_URL_DB_NAME);
 }
 
 console.log('[db] DB_* (when no DATABASE_URL):', {
@@ -49,25 +53,6 @@ console.log('[db] DB_* (when no DATABASE_URL):', {
   DB_PORT,
 });
 console.log('[db] Using dialect:', 'mysql');
-
-
-
-function extractDbNameFromDatabaseUrl(databaseUrl: string | undefined): string | null {
-  if (!databaseUrl) return null;
-  try {
-    // mysql://user:pass@host:port/dbname?...
-    const withoutProto = databaseUrl.replace(/^\w+:\/\//, '');
-    const slash = withoutProto.indexOf('/');
-    if (slash === -1) return null;
-    const afterSlash = withoutProto.slice(slash + 1);
-    const dbPart = afterSlash.split('?')[0].trim();
-    return dbPart || null;
-  } catch {
-    return null;
-  }
-}
-
-const DATABASE_URL_DB_NAME = extractDbNameFromDatabaseUrl(DATABASE_URL);
 
 const TIDB_CLOUD_CA_CONTENT = process.env.TIDB_CLOUD_CA_CONTENT || process.env.TIDB_CLOUD_CA;
 const TIDB_CLOUD_CA_PATH = process.env.TIDB_CLOUD_CA_PATH;
@@ -99,46 +84,85 @@ const tidbSslOptions = tidbCaPem
 
 const dialectOptions = IS_TIDB_CLOUD && tidbSslOptions ? { ssl: tidbSslOptions } : {};
 
-export const sequelize = DATABASE_URL
-  ? new Sequelize(DATABASE_URL, {
-      dialect: 'mysql',
-      logging: process.env.NODE_ENV === 'development' ? console.log : false,
-      dialectOptions,
-      pool: {
-        max: 10,
-        min: 0,
-        acquire: 30000,
-        idle: 10000,
-      },
-      define: {
-        underscored: false,
-      },
-    })
-  : new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
-      host: DB_HOST,
-      port: DB_PORT,
-      dialect: 'mysql',
-      logging: process.env.NODE_ENV === 'development' ? console.log : false,
-      dialectOptions: {
-        ssl: {
-          require: false,
-          rejectUnauthorized: false,
-        },
-      },
-      pool: {
-        max: 10,
-        min: 0,
-        acquire: 30000,
-        idle: 10000,
-      },
-      define: {
-        underscored: false,
-      },
-    });
+const DATABASE_CA_CERT = process.env.DATABASE_CA_CERT;
+const DATABASE_CA_CERT_PATH = process.env.DATABASE_CA_CERT_PATH;
+let databaseCaPem: string | undefined;
+if (DATABASE_CA_CERT) {
+  databaseCaPem = Buffer.from(DATABASE_CA_CERT, 'base64').toString();
+} else if (DATABASE_CA_CERT_PATH && fs.existsSync(DATABASE_CA_CERT_PATH)) {
+  databaseCaPem = fs.readFileSync(DATABASE_CA_CERT_PATH, 'utf-8');
+}
 
+let sequelize: Sequelize;
 
+if (DATABASE_URL) {
+  let url: URL;
+  try {
+    url = new URL(DATABASE_URL);
+  } catch {
+    throw new Error('Invalid DATABASE_URL format');
+  }
 
+  const database = url.pathname.replace(/^\//, '') || DB_NAME;
+  const username = url.username || DB_USER;
+  const password = url.password || DB_PASSWORD;
+  const host = url.hostname || DB_HOST;
+  const port = url.port ? parseInt(url.port, 10) : DB_PORT;
 
+  const sslMode = url.searchParams.get('ssl-mode');
+  const isSslRequired = sslMode === 'REQUIRED' || sslMode === 'VERIFY_CA' || sslMode === 'VERIFY_IDENTITY';
+
+  const sslConfig: Record<string, any> = {};
+  if (isSslRequired) {
+    sslConfig.ssl = databaseCaPem
+      ? { ca: databaseCaPem, rejectUnauthorized: true }
+      : { rejectUnauthorized: false };
+  }
+
+  sequelize = new Sequelize(database, username, password, {
+    host,
+    port,
+    dialect: 'mysql',
+    logging: process.env.NODE_ENV === 'development' ? console.log : false,
+    dialectOptions: {
+      ...sslConfig,
+      ...(IS_TIDB_CLOUD && tidbSslOptions ? { ssl: tidbSslOptions } : {}),
+    },
+    pool: {
+      max: 10,
+      min: 0,
+      acquire: 30000,
+      idle: 10000,
+    },
+    define: {
+      underscored: false,
+    },
+  });
+} else {
+  sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
+    host: DB_HOST,
+    port: DB_PORT,
+    dialect: 'mysql',
+    logging: process.env.NODE_ENV === 'development' ? console.log : false,
+    dialectOptions: {
+      ssl: {
+        require: false,
+        rejectUnauthorized: false,
+      },
+    },
+    pool: {
+      max: 10,
+      min: 0,
+      acquire: 30000,
+      idle: 10000,
+    },
+    define: {
+      underscored: false,
+    },
+  });
+}
+
+export { sequelize };
 
 // Maximum number of connection attempts before giving up.
 const MAX_DB_RETRIES = 15;
@@ -225,4 +249,3 @@ export async function stopDatabase(): Promise<void> {
 }
 
 export default sequelize;
-

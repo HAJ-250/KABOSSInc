@@ -1,5 +1,5 @@
-export const up = async (sequelize: any) => {
-  await sequelize.query(`
+export const up = async ({ context }: { context: any }) => {
+  await context.query(`
     ALTER TABLE \`Notifications\`
     MODIFY COLUMN \`type\` ENUM(
       'booking',
@@ -12,8 +12,8 @@ export const up = async (sequelize: any) => {
   `);
 };
 
-export const down = async (sequelize: any) => {
-  const [rows] = await sequelize.query(
+export const down = async ({ context }: { context: any }) => {
+  const [rows] = await context.query(
     `SELECT COUNT(*) as c FROM \`Notifications\` WHERE \`type\` = 'payment'`
   );
   const count = rows?.[0]?.c ?? 0;
@@ -25,7 +25,7 @@ export const down = async (sequelize: any) => {
     );
   }
 
-  await sequelize.query(`
+  await context.query(`
     ALTER TABLE \`Notifications\`
     MODIFY COLUMN \`type\` ENUM(
       'booking',
