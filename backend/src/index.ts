@@ -33,6 +33,7 @@ const PORT = process.env.PORT || 3001;
 const FRONTEND_URLS = [
   process.env.FRONTEND_URL || 'http://localhost:5173',
   process.env.ADMIN_URL || 'http://localhost:5174',
+  'https://admin-dashboard-3zdgvmqds-httpsgithubcomhaj-250kabossinc.vercel.app',
 ];
 
 process.on('unhandledRejection', (reason) => {
@@ -50,6 +51,7 @@ app.use(helmet({
 app.use(cors({
   origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
     if (!origin || FRONTEND_URLS.includes(origin)) return callback(null, true);
+    console.warn(`[cors] Blocked origin: ${origin}`);
     return callback(null, false);
   },
   credentials: true,
