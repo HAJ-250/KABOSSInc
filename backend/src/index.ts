@@ -30,9 +30,15 @@ import { initSocket } from './socket/index.js';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+const normalizeOrigin = (origin: string | undefined) => {
+  if (!origin) return origin;
+  return origin.trim().replace(/\/+$/, '');
+};
+
 const FRONTEND_URLS = [
-  process.env.FRONTEND_URL || 'http://localhost:5173',
-  process.env.ADMIN_URL || 'http://localhost:5174',
+  normalizeOrigin(process.env.FRONTEND_URL) || 'http://localhost:5173',
+  normalizeOrigin(process.env.ADMIN_URL) || 'http://localhost:5174',
+  'https://kabossimage.vercel.app',
   'https://admin-dashboard-3zdgvmqds-httpsgithubcomhaj-250kabossinc.vercel.app',
 ];
 
