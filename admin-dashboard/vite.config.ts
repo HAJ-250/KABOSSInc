@@ -13,19 +13,19 @@ server: {
     port: 5174,
     proxy: {
       '/api': {
-        target: 'http://localhost:3001',
+        target: 'https://kabossimage-api.onrender.com',
         changeOrigin: true,
-        secure: false,
+        secure: true,
       },
-'/socket.io': {
-        target: 'http://localhost:3001',
+      '/socket.io': {
+        target: 'https://kabossimage-api.onrender.com',
         changeOrigin: true,
         ws: true,
       },
       '/uploads': {
-        target: 'http://localhost:3001',
+        target: 'https://kabossimage-api.onrender.com',
         changeOrigin: true,
-        secure: false,
+        secure: true,
       },
     },
   },

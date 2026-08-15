@@ -38,6 +38,11 @@ backend/uploads/
 
 # OS-generated files
 Desktop.ini
+Thumbs.db
+
+# Vercel deployment cache
+frontend/.vercel/
+admin-dashboard/.vercel/
 
 # Database backups (may contain sensitive data)
 *.sql

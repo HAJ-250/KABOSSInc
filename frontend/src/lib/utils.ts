@@ -53,7 +53,7 @@ export function resolveImageUrl(url: string): string {
   // This works in dev (backend on :3001) in addition to the Vite proxy, and in
   // production when VITE_API_URL points to the backend.
   if (url.startsWith('/uploads/')) {
-    const base = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+    const base = import.meta.env.VITE_API_URL || 'https://kabossimage-api.onrender.com';
     // Strip any trailing /api path and trailing slash so we get the bare origin.
     const apiOrigin = base.replace(/\/+$/, '').replace(/\/api$/, '');
     return `${apiOrigin}${url}`;

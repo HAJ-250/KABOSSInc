@@ -2,7 +2,7 @@ import { io, Socket } from 'socket.io-client';
 import { getAuthToken } from '@/lib/firebase';
 import toast from 'react-hot-toast';
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:3001';
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'https://kabossimage-api.onrender.com';
 
 let socket: Socket | null = null;
 
