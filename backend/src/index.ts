@@ -294,6 +294,23 @@ async function start() {
     await seed();
   }
 
+  const adminEmail = process.env.ADMIN_EMAIL;
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  if (adminEmail && adminPassword) {
+    const existingAdmin = await User.findOne({ where: { role: 'admin' } });
+    if (!existingAdmin) {
+      const hashedPassword = await bcrypt.hash(adminPassword, 10);
+      await User.create({
+        email: adminEmail,
+        password: hashedPassword,
+        displayName: process.env.ADMIN_DISPLAY_NAME || 'Admin',
+        role: 'admin',
+        emailVerified: true,
+      });
+      console.log('Created production admin user from environment variables');
+    }
+  }
+
   httpServer = http.createServer(app);
 
   const io = new SocketIOServer(httpServer, {
