@@ -331,14 +331,16 @@ async function start() {
       await seed();
     }
 
+    const adminUsername = process.env.ADMIN_USERNAME;
     const adminEmail = process.env.ADMIN_EMAIL;
     const adminPassword = process.env.ADMIN_PASSWORD;
-    if (adminEmail && adminPassword) {
+    if (adminPassword && (adminUsername || adminEmail)) {
       const existingAdmin = await User.findOne({ where: { role: 'admin' } });
       if (!existingAdmin) {
         const hashedPassword = await bcrypt.hash(adminPassword, 10);
         await User.create({
-          email: adminEmail,
+          username: adminUsername || adminEmail?.split('@')[0] || 'admin',
+          email: adminEmail || `${adminUsername}@kabossinc.com`,
           password: hashedPassword,
           displayName: process.env.ADMIN_DISPLAY_NAME || 'Admin',
           role: 'admin',
