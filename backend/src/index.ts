@@ -30,6 +30,8 @@ import { initSocket } from './socket/index.js';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+app.set('trust proxy', 1);
+
 const normalizeOrigin = (origin: string | undefined) => {
   if (!origin) return origin;
   return origin.trim().replace(/\/+$/, '');
