@@ -65,15 +65,35 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
+let dbReady = false;
+let dbError: string | null = null;
+
+async function bootstrapDatabase(): Promise<void> {
+  try {
+    await initDatabase();
+    dbReady = true;
+    console.log('Database ready');
+  } catch (error: any) {
+    dbReady = false;
+    dbError = String(error?.message || error);
+    console.error('Database initialization failed:', dbError);
+  }
+}
+
+function dbMiddleware(_req: express.Request, res: express.Response, next: express.NextFunction) {
+  if (dbReady) return next();
+  res.status(503).json({ error: 'Service starting up. Database not yet ready.', retry: true });
+}
+
 app.get('/health', (_req, res) => {
-  res.json({ status: 'ok' });
+  res.json({ status: dbReady ? 'ok' : 'starting', database: dbReady });
 });
 
 app.get('/api/health', (_req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  res.json({ status: dbReady ? 'ok' : 'starting', database: dbReady, timestamp: new Date().toISOString() });
 });
 
-app.use('/api/', apiLimiter);
+app.use('/api/', dbMiddleware);
 
 app.post('/api/auth/register', authLimiter, async (req, res) => {
   try {
@@ -287,30 +307,6 @@ process.on('SIGTERM', async () => {
 });
 
 async function start() {
-  await initDatabase();
-
-  if (process.env.NODE_ENV !== 'production') {
-    const { default: seed } = await import('./seed.js');
-    await seed();
-  }
-
-  const adminEmail = process.env.ADMIN_EMAIL;
-  const adminPassword = process.env.ADMIN_PASSWORD;
-  if (adminEmail && adminPassword) {
-    const existingAdmin = await User.findOne({ where: { role: 'admin' } });
-    if (!existingAdmin) {
-      const hashedPassword = await bcrypt.hash(adminPassword, 10);
-      await User.create({
-        email: adminEmail,
-        password: hashedPassword,
-        displayName: process.env.ADMIN_DISPLAY_NAME || 'Admin',
-        role: 'admin',
-        emailVerified: true,
-      });
-      console.log('Created production admin user from environment variables');
-    }
-  }
-
   httpServer = http.createServer(app);
 
   const io = new SocketIOServer(httpServer, {
@@ -325,6 +321,34 @@ async function start() {
 
   httpServer.listen(PORT, () => {
     console.log(`KABOSS Inc API server running on port ${PORT}`);
+  });
+
+  bootstrapDatabase().then(async () => {
+    if (!dbReady) return;
+
+    if (process.env.NODE_ENV !== 'production') {
+      const { default: seed } = await import('./seed.js');
+      await seed();
+    }
+
+    const adminEmail = process.env.ADMIN_EMAIL;
+    const adminPassword = process.env.ADMIN_PASSWORD;
+    if (adminEmail && adminPassword) {
+      const existingAdmin = await User.findOne({ where: { role: 'admin' } });
+      if (!existingAdmin) {
+        const hashedPassword = await bcrypt.hash(adminPassword, 10);
+        await User.create({
+          email: adminEmail,
+          password: hashedPassword,
+          displayName: process.env.ADMIN_DISPLAY_NAME || 'Admin',
+          role: 'admin',
+          emailVerified: true,
+        });
+        console.log('Created production admin user from environment variables');
+      }
+    }
+  }).catch((err) => {
+    console.error('Post-startup database bootstrap failed:', err);
   });
 }
 

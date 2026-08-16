@@ -91,7 +91,7 @@ export function AppLayout() {
         </nav>
 
         <div className="absolute bottom-0 left-0 right-0 p-3 border-t border-white/10">
-          <a href="http://localhost:5173" target="_blank" rel="noreferrer"
+          <a href={import.meta.env.VITE_FRONTEND_URL || 'https://kabossinc.com'} target="_blank" rel="noreferrer"
             className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
             <Home className="h-4 w-4" />
             Back to Website
