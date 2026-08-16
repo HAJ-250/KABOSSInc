@@ -7,6 +7,7 @@ import {
   Globe,
   type LucideIcon,
 } from 'lucide-react';
+import { resolveImageUrl } from '@/lib/utils';
 
 export interface ServiceData {
   id: string;
@@ -37,7 +38,7 @@ export const services: ServiceData[] = [
     icon: Printer,
     category: 'printing',
     categoryKey: 'services.cat.printing',
-    image: '/uploads/services/printing.jpg',
+    image: resolveImageUrl('/uploads/services/printing.jpg'),
     color: 'from-blue-500 to-cyan-500',
     gradient: 'bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30',
     items: [
@@ -81,7 +82,7 @@ export const services: ServiceData[] = [
     icon: Palette,
     category: 'graphic-design',
     categoryKey: 'services.cat.graphicDesign',
-    image: '/uploads/services/1783354105972-bbf27ec5555f78.jpg',
+    image: resolveImageUrl('/uploads/services/1783354105972-bbf27ec5555f78.jpg'),
     color: 'from-purple-500 to-pink-500',
     gradient: 'bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30',
     items: [
@@ -117,7 +118,7 @@ export const services: ServiceData[] = [
     icon: Camera,
     category: 'photography',
     categoryKey: 'services.cat.photography',
-    image: '/uploads/services/1783360200082-3b5bd59730c76.jpg',
+    image: resolveImageUrl('/uploads/services/1783360200082-3b5bd59730c76.jpg'),
     color: 'from-amber-500 to-orange-500',
     gradient: 'bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30',
     items: [
@@ -149,7 +150,7 @@ export const services: ServiceData[] = [
     icon: Volume2,
     category: 'sound-system',
     categoryKey: 'services.cat.soundSystem',
-    image: '/uploads/services/sound.jpg',
+    image: resolveImageUrl('/uploads/services/sound.jpg'),
     color: 'from-green-500 to-emerald-500',
     gradient: 'bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30',
     items: [
@@ -181,7 +182,7 @@ export const services: ServiceData[] = [
     icon: Monitor,
     category: 'digital-services',
     categoryKey: 'services.cat.digitalServices',
-    image: '/uploads/services/digital.jpg',
+    image: resolveImageUrl('/uploads/services/digital.jpg'),
     color: 'from-red-500 to-rose-500',
     gradient: 'bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-950/30 dark:to-rose-950/30',
     items: [
@@ -209,7 +210,7 @@ export const services: ServiceData[] = [
     icon: Globe,
     category: 'irembo-assistance',
     categoryKey: 'services.cat.iremboAssistance',
-    image: '/uploads/services/irembo.jpg',
+    image: resolveImageUrl('/uploads/services/irembo.jpg'),
     color: 'from-teal-500 to-emerald-500',
     gradient: 'bg-gradient-to-br from-teal-50 to-emerald-50 dark:from-teal-950/30 dark:to-emerald-950/30',
     items: [

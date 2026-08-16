@@ -138,7 +138,7 @@ export function Home() {
                 <div className="absolute inset-0 bg-gradient-to-br from-kaboss-500/30 to-premium-gold/20 rounded-3xl blur-3xl" />
                 <div className="relative w-full h-full rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl overflow-hidden">
                   <img
-                    src="/uploads/profile/1783354105972-bbf27ec5555f78.jpg"
+                     src={resolveImageUrl('/uploads/profile/1783354105972-bbf27ec5555f78.jpg')}
                     alt="KABOSS Inc"
                     className="w-full h-full object-cover"
                     loading="eager"
@@ -278,7 +278,7 @@ export function Home() {
             >
               <div className="aspect-[4/3] rounded-3xl border border-white/20 backdrop-blur-xl overflow-hidden">
                 <img
-                  src="/uploads/profile/1783354105972-bbf27ec5555f78.jpg"
+                   src={resolveImageUrl('/uploads/profile/1783354105972-bbf27ec5555f78.jpg')}
                   alt="KABOSS Inc - Nyamasheke, Rwanda"
                   className="w-full h-full object-cover"
                   loading="lazy"

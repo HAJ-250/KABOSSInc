@@ -3,6 +3,7 @@ import { MapPin, Clock, Phone, Mail, Target, Eye, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useI18n } from '@/i18n';
+import { resolveImageUrl } from '@/lib/utils';
 
 const fadeUp = {
   initial: { opacity: 0, y: 30 },
@@ -71,7 +72,7 @@ return (
               <div className="aspect-square rounded-3xl bg-gradient-to-br from-kaboss-500/20 to-premium-gold/20 border border-white/20 backdrop-blur-xl flex items-center justify-center overflow-hidden">
                 <div className="w-full h-full">
                   <img
-                    src="/uploads/profile/1783354105972-bbf27ec5555f78.jpg"
+                     src={resolveImageUrl('/uploads/profile/1783354105972-bbf27ec5555f78.jpg')}
                     alt="KABOSS Inc Profile"
                     className="w-full h-full object-cover"
                   />

@@ -34,7 +34,7 @@ Logs/
 Thumbs.db
 
 # Uploaded user content (local development only; production uses cloud storage)
-backend/uploads/
+# backend/uploads/
 
 # OS-generated files
 Desktop.ini

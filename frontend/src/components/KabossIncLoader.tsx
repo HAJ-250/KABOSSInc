@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import styles from './KabossIncLoader.module.css';
 
+import { resolveImageUrl } from '@/lib/utils';
+
 interface KabossIncLoaderProps {
   isVisible: boolean;
   onComplete?: () => void;
 }
 
-const PROFILE_IMAGE = '/uploads/profile/1783354105972-bbf27ec5555f78.jpg';
+const PROFILE_IMAGE = resolveImageUrl('/uploads/profile/1783354105972-bbf27ec5555f78.jpg');
 
 export function KabossIncLoader({ isVisible, onComplete }: KabossIncLoaderProps) {
   const [imageError, setImageError] = useState(false);

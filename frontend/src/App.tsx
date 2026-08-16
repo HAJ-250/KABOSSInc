@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
 import { useEffect } from 'react';
+import { resolveImageUrl } from '@/lib/utils';
 import { InitialLoader } from '@/components/ui/InitialLoader';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { Home } from '@/pages/Home';
@@ -50,6 +51,14 @@ const queryClient = new QueryClient({
   },
 });
 
+function BackgroundImageInit() {
+  useEffect(() => {
+    const image = resolveImageUrl('/uploads/profile/1783354105972-bbf27ec5555f78.jpg');
+    document.documentElement.style.setProperty('--app-bg-image', `url(${image})`);
+  }, []);
+  return null;
+}
+
 function ThemeInit() {
   const isDarkMode = useThemeStore((s) => s.isDarkMode);
   useEffect(() => {
@@ -69,6 +78,7 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <I18nProvider>
       <BrowserRouter>
+        <BackgroundImageInit />
         <ThemeInit />
         <InitialLoader />
         <AuthProvider>
@@ -99,11 +109,11 @@ export default function App() {
             <Route element={<ProtectedRoute />}>
               <Route element={<DashboardLayout />}>
                 <Route path="/dashboard" element={<DashboardOverview />} />
-<Route path="/dashboard/bookings" element={<DashboardBookings />} />
-<Route path="/dashboard/quotes" element={<DashboardQuotes />} />
+                <Route path="/dashboard/bookings" element={<DashboardBookings />} />
+                <Route path="/dashboard/quotes" element={<DashboardQuotes />} />
                 <Route path="/dashboard/payments" element={<DashboardPayments />} />
                 <Route path="/dashboard/messages" element={<DashboardMessages />} />
-<Route path="/dashboard/downloads" element={<DashboardDownloads />} />
+                <Route path="/dashboard/downloads" element={<DashboardDownloads />} />
                 <Route path="/dashboard/gallery" element={<Gallery />} />
                 <Route path="/dashboard/notifications" element={<DashboardNotifications />} />
                 <Route path="/dashboard/profile" element={<DashboardProfile />} />
@@ -117,7 +127,7 @@ export default function App() {
                 <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/admin/bookings" element={<AdminBookings />} />
                 <Route path="/admin/messages" element={<AdminBookings />} />
-<Route path="/admin/gallery" element={<AdminGallery />} />
+                <Route path="/admin/gallery" element={<AdminGallery />} />
                 <Route path="/admin/content" element={<AdminContent />} />
                 <Route path="/admin/analytics" element={<AdminDashboard />} />
                 <Route path="/admin/announcements" element={<AdminDashboard />} />

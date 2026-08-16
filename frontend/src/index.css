@@ -6,7 +6,7 @@
   :root {
     --toast-bg: #ffffff;
     --toast-color: #1a1a2e;
-  }
+    }
   .dark {
     --toast-bg: #0a0a1a;
     --toast-color: #ffffff;
@@ -21,14 +21,14 @@
 
   /* Shared hero/header background */
   .app-bg-image {
-    background-image: url('/uploads/profile/1783354105972-bbf27ec5555f78.jpg');
+    background-image: var(--app-bg-image);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
   }
 
   .app-bg-image-fixed {
-    background-image: url('/uploads/profile/1783354105972-bbf27ec5555f78.jpg');
+    background-image: var(--app-bg-image);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
