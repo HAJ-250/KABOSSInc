@@ -5,6 +5,8 @@ import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 import http from 'http';
 import { Server as SocketIOServer } from 'socket.io';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 dotenv.config();
 import User from './models/User.js';
@@ -280,7 +282,10 @@ app.use('/api/admin/chat', adminChatRouter);
 app.use('/api/admin/bookings', adminBookingFilesRouter);
 app.use('/api/profile-picture', profilePictureRouter);
 app.use('/api/payments', paymentsRouter);
-app.use('/uploads', express.static('uploads'));
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const UPLOADS_DIR = path.join(__dirname, '..', 'uploads');
+console.log('[uploads] Serving static files from:', UPLOADS_DIR);
+app.use('/uploads', express.static(UPLOADS_DIR));
 
 
 
@@ -357,4 +362,5 @@ async function start() {
 }
 
 start();
+
 
