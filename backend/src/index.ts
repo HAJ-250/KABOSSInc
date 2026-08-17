@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import http from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import path from 'node:path';
+import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 dotenv.config();
@@ -283,7 +284,12 @@ app.use('/api/admin/bookings', adminBookingFilesRouter);
 app.use('/api/profile-picture', profilePictureRouter);
 app.use('/api/payments', paymentsRouter);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const UPLOADS_DIR = path.join(__dirname, '..', 'uploads');
+const uploadCandidates = [
+  path.join(__dirname, '..', 'uploads'),
+  path.join(process.cwd(), 'uploads'),
+  path.join(process.cwd(), '..', 'uploads'),
+];
+const UPLOADS_DIR = uploadCandidates.find((dir) => fs.existsSync(dir)) || path.join(process.cwd(), 'uploads');
 console.log('[uploads] Serving static files from:', UPLOADS_DIR);
 app.use('/uploads', express.static(UPLOADS_DIR));
 
@@ -362,5 +368,7 @@ async function start() {
 }
 
 start();
+
+
 
 
