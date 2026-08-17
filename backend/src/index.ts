@@ -290,7 +290,24 @@ const uploadCandidates = [
   path.join(process.cwd(), '..', 'uploads'),
 ];
 const UPLOADS_DIR = uploadCandidates.find((dir) => fs.existsSync(dir)) || path.join(process.cwd(), 'uploads');
+
+console.log('[uploads] __dirname:', __dirname);
+console.log('[uploads] process.cwd():', process.cwd());
+console.log('[uploads] candidates:', uploadCandidates);
 console.log('[uploads] Serving static files from:', UPLOADS_DIR);
+console.log('[uploads] UPLOADS_DIR exists:', fs.existsSync(UPLOADS_DIR));
+if (fs.existsSync(UPLOADS_DIR)) {
+  try {
+    const profileDir = path.join(UPLOADS_DIR, 'profile');
+    console.log('[uploads] profile dir exists:', fs.existsSync(profileDir));
+    if (fs.existsSync(profileDir)) {
+      const files = fs.readdirSync(profileDir).slice(0, 5);
+      console.log('[uploads] profile files (first 5):', files);
+    }
+  } catch (err) {
+    console.error('[uploads] profile dir error:', err);
+  }
+}
 app.use('/uploads', express.static(UPLOADS_DIR));
 
 
@@ -368,6 +385,7 @@ async function start() {
 }
 
 start();
+
 
 
 
